@@ -1,7 +1,7 @@
 "use client";
 
-import PlusIcon from  "../assets/icons/plus.svg";
-import MinusIcon from "../assets/icons/minus.svg";
+import PlusIcon from  "@/assets/icons/plus.svg"
+import MinusIcon from "@/assets/icons/minus.svg";
 import clsx from "clsx";
 import React from "react";
 import { useState } from "react";
@@ -65,7 +65,7 @@ const items = [
   {
     question: "How can I sign up as an early adopter?",
     answer:
-      "Fill out the sign-up form with your name, email, motivation for joining, and experience level. “Join the Waitlist” ",
+      "Fill out the sign-up form with your name, email, motivation for joining, and experience level.",
   },
   {
     question: "What components will be available after the network goes live?",
@@ -84,7 +84,7 @@ const AccordionItem = ({question,answer} : {question: string; answer: string;}) 
     <div className=" py-7 border-b border-white/30" onClick={() => setIsOpen(!isOpen)}>
       <div className="flex items-center">
         <span className="flex-1 text-lg font-bold">{question}</span>
-        {isOpen ? <MinusIcon /> : <PlusIcon />}
+        {isOpen ? <MinusIcon className="text-purple1" /> : <PlusIcon className="text-purple1" />}
       </div>
       <div className={clsx("mt-4", {
         hidden: !isOpen,
@@ -97,11 +97,11 @@ const AccordionItem = ({question,answer} : {question: string; answer: string;}) 
 
 }
 
-export const FAQs = () => {
+ const FAQs = () => {
   return (
-    <div className="bg-black text-white bg-gradient-to-b py-[72px] sm:py-24">
+    <div className="bg-black text-gray-300 bg-gradient-to-b py-[72px] sm:py-24">
       <div className="container">
-        <h2 className="text-center text-5xl sm:text-6xl sm:max-w-[648] mx-auto font-bold tracking-tighter">Frequently Asked Questions</h2>
+        <h2 className="text-center text-3xl sm:text-5xl sm:max-w-[648] mx-auto font-bold tracking-tighter">Frequently Asked Questions</h2>
         <div className="mt-12 max-w-[648px] mx-auto">
           {items.map(({question,answer}) => (
             <AccordionItem question={question} answer={answer} key={question}/>
@@ -112,3 +112,4 @@ export const FAQs = () => {
     </div>
   );
 };
+export default FAQs;
