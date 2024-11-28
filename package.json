@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^2.1.5",
     "@heroicons/react": "^2.1.5",
+    "@metamask/providers": "^18.1.1",
     "@nextui-org/react": "^2.4.6",
     "@radix-ui/react-accordion": "^1.2.0",
     "@tabler/icons-react": "^3.14.0",
@@ -20,6 +21,7 @@
     "@tsparticles/slim": "^3.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "ethers": "^6.13.4",
     "framer-motion": "^11.5.4",
     "lucide-react": "^0.439.0",
     "next": "14.2.4",
