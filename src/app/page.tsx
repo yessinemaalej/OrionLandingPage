@@ -20,6 +20,7 @@ export default function Home() {
     <>
       {/* <Navbar /> */}
       <Hero />
+      <Pricing />
       {/* <LogoTicker /> */}
       <Stats />
       <SparklesPreview />
@@ -28,7 +29,7 @@ export default function Home() {
       <LogoTicker />
       <ProductShowcase />
       {/* <WobbleCardDemo /> */}
-      <Pricing />
+      
       <Feedback />
       <CallToAction />
       

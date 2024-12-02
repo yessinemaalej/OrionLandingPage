@@ -33,7 +33,7 @@ const Pricing = () => {
   // Smart Contract Information
   const contractAddress = "0xAb8776314BC70952E45A2E1a24418AadA6FF9138"; // Replace with your contract address
   const contractABI = contractJson.abi;
-  
+
   const addPromoCode = async () => {
     try {
 
@@ -71,26 +71,26 @@ const Pricing = () => {
         setPromoStatus("Please enter a promo code to verify.");
         return;
       }
-  
+
       // Check wallet connection
       if (!window.ethereum) {
         setPromoStatus("MetaMask is not installed.");
         return;
       }
-  
+
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contractAddress, contractABI, signer);
-  
+
       // Check the discount for the provided promo code
       const discount = await contract.promoCodes(promoCode);
-  
+
       console.log(promoCode);
       console.log(discount.toString()); // Ensure `discount` is converted to a string for logging
-  
+
       // Convert `discount` from BigInt to a number for calculations
       const discountValue = Number(discount);
-  
+
       if (discountValue > 0) {
         const discountedPayment =
           (fixedPaymentAmount * (100 - discountValue)) / 100;
@@ -129,7 +129,7 @@ const Pricing = () => {
 
       // Call payment function
       const transaction = await contract.pay("ORDER123", promoCode.trim(), {
-        value: ethers.parseUnits(discountedAmount?.toString() || fixedPaymentAmount.toString(), "DIONE"),
+        value: ethers.parseUnits(discountedAmount?.toString() || fixedPaymentAmount.toString(), "wei"),
       });
 
       await transaction.wait(); // Wait for the transaction to be mined
@@ -154,6 +154,7 @@ const Pricing = () => {
   return (
     <section className="bg-black min-h-screen text-gray-200 flex items-center justify-center">
       <div className="w-full mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+
         {!paymentSuccess ? (
           <>
             {/* <div className="text-center">
@@ -174,23 +175,21 @@ const Pricing = () => {
             </div> */}
 
             {/* Verification Form */}
-            <div className="mx-auto flex flex-col items-center justify-center px-4 sm:px-6 lg-8">
-              <h2 className="text-3xl text-center font-bold sm:text-4xl text-gray-200">Payment Confirmation for ORION Beta Access</h2>
-              <p className="mt-7 max-w-2xl text-center text-gray-500 px-4 sm:px-0">As part of the ORION Beta Testing Program, <br/>
-                                                    this section facilitates your payment confirmation for your assigned batch.
-                                                    Please proceed with your payment securing your exclusive spot and ensuring the Orion sent out to you.
-                                                    We appreciate your commitment and look forward to your valuable insights as we refine and enhance the ORION experience together!</p>
+            <div className="mx-auto max-w-xl text-center">
+              <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">Payment Confirmation for ORION Beta Access</h2>
+              <p className="mt-7 text-lg/8 text-gray-500">  Confirm your spot in the ORION Beta Testing Program by completing your payment. Secure your exclusive device and join us in shaping the future of renewable innovation. Thank you for being part of this journey!
+              </p>
             </div>
             <form className="mx-auto max-w-2xl sm:mt-20  p-6 rounded-lg shadow-lg text-gray-200">
                 <div className="w-full">
                   <label className="block text-sm/6 font-semibold text-gray-300 ">Full Name</label>
                   <div className="mt-2.5">
                     <input
-                    type="text"
-                    name="fullName"
-                    value={shipmentDetails.fullName}
-                    onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg  focus:border-purple-500 focus:outline-none text-gray-400"
+                      type="text"
+                      name="fullName"
+                      value={shipmentDetails.fullName}
+                      onChange={handleChange}
+                      className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg  focus:border-purple-500 focus:outline-none text-gray-400"
                     />
                   </div>
                 </div>
@@ -198,12 +197,12 @@ const Pricing = () => {
                   <label className="block mt-3 text-sm/6 font-semibold text-gray-300">Email</label>
                   <div className="mt-2.5">
                     <input
-                    type="email"
-                    name="email"
-                    value={shipmentDetails.email}
-                    onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none text-gray-400"
-                  />
+                      type="email"
+                      name="email"
+                      value={shipmentDetails.email}
+                      onChange={handleChange}
+                      className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none text-gray-400"
+                    />
                   </div>
                 </div>
 
@@ -220,104 +219,104 @@ const Pricing = () => {
                     />
                   </div>
                   <div>
-                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">City</label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={shipmentDetails.city}
-                    onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
-                  />
-                  </div>
-                </div>
-                
-                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-                  <div>
-                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
-                    Address Line 1
-                  </label>
-                  <input
-                    type="text"
-                    name="addressLine1"
-                    value={shipmentDetails.addressLine1}
-                    onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
-                  />
-                  </div>
-                  <div>
-                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
-                    Address Line 2 (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    name="addressLine2"
-                    value={shipmentDetails.addressLine2}
-                    onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
-                  />
+                    <label className="block mt-3 text-sm/6 font-semibold text-gray-300">City</label>
+                    <input
+                      type="text"
+                      name="city"
+                      value={shipmentDetails.city}
+                      onChange={handleChange}
+                      className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                    />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
                   <div>
-                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">ZIP Code</label>
-                  <input
-                    type="text"
-                    name="zipCode"
-                    value={shipmentDetails.zipCode}
-                    onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
-                  />
+                    <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                      Address Line 1
+                    </label>
+                    <input
+                      type="text"
+                      name="addressLine1"
+                      value={shipmentDetails.addressLine1}
+                      onChange={handleChange}
+                      className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                    />
                   </div>
                   <div>
-                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    name="phoneNumber"
-                    value={shipmentDetails.phoneNumber}
-                    onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
-                  />
+                    <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                      Address Line 2 (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      name="addressLine2"
+                      value={shipmentDetails.addressLine2}
+                      onChange={handleChange}
+                      className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                    />
                   </div>
                 </div>
 
-                
+                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                  <div>
+                    <label className="block mt-3 text-sm/6 font-semibold text-gray-300">ZIP Code</label>
+                    <input
+                      type="text"
+                      name="zipCode"
+                      value={shipmentDetails.zipCode}
+                      onChange={handleChange}
+                      className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      name="phoneNumber"
+                      value={shipmentDetails.phoneNumber}
+                      onChange={handleChange}
+                      className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+
                 <div>
-                <label className="block mt-3 text-sm/6 font-semibold text-gray-300">Promo Code (Optional)</label>
-                <div className="flex gap-x-4">
-                  <input
-                    type="text"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
-                    className="min-w-0 flex-auto mt-1 p-2 rounded-md border border-gray-700 bg-white/5 rounded-l-lg focus:border-purple-500 focus:outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={verifyPromoCode}
-                    className="flex-none rounded-md bg-indigo-500 px-5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500e"
-                  >
-                    Verify
-                  </button>
+                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">Promo Code (Optional)</label>
+                  <div className="flex gap-x-4">
+                    <input
+                      type="text"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      className="min-w-0 flex-auto mt-1 p-2 rounded-md border border-gray-700 bg-white/5 rounded-l-lg focus:border-purple-500 focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={verifyPromoCode}
+                      className="flex-none rounded-md bg-indigo-500 px-5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500e"
+                    >
+                      Verify
+                    </button>
+                  </div>
+
+
+
+                  {promoStatus && (
+                    <p className={`mt-2 ${promoStatus.includes("valid") ? "text-green-400" : "text-red-400"}`}>
+                      {promoStatus}
+                    </p>
+                  )}
                 </div>
 
-              
-
-              {promoStatus && (
-                <p className={`mt-2 ${promoStatus.includes("valid") ? "text-green-400" : "text-red-400"}`}>
-                  {promoStatus}
-                </p>
-              )}
-            </div>
-
-            {discountedAmount !== null && (
-              <div>
-                <p className="text-sm font-medium text-green-400">
-                  Your discounted payment amount: {discountedAmount} DIONE
-                </p>
-              </div>
-            )}
+                {discountedAmount !== null && (
+                  <div>
+                    <p className="text-sm font-medium text-green-400">
+                      Your discounted payment amount: {discountedAmount} DIONE
+                    </p>
+                  </div>
+                )}
                 <button
                   type="button"
                   onClick={handlePayment}
@@ -329,48 +328,49 @@ const Pricing = () => {
                   </div>
                 </button>
             </form>
-            
+
           </>
-        ) : (
-          <div className="text-center">
-            <h2 className="text-3xl font-bold sm:text-4xl text-green-400">
-              Payment Successful!
-            </h2>
-            <p className="mt-4 text-gray-400">
-              Your transaction was successful. Your Orion is on its way!
-            </p>
-            <p className="mt-2 text-gray-400">
-              For further information, please contact us at:{" "}
-              <a
-                href="mailto:orion@dioneprotocol.com"
-                className="text-purple-500 underline"
-              >
-                orion@dioneprotocol.com
-              </a>
-            </p>
-            <p className="mt-4 text-gray-300">
-              <span className="font-bold">Transaction Hash:</span>
-              <br />
-              <span className="text-purple-500 break-all">
-                {transactionHash}
-              </span>
-            </p>
-            <p className="mt-4 text-gray-300">
-              <a
-                href={`https://testnet.odysseyscan.com/tx/${transactionHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-purple-500 underline"
-              >
-                View on Blockchain Explorer
-              </a>
-            </p>
-          </div>
-        )}
+            ) : (
+            <div className="text-center">
+              <h2 className="text-3xl font-bold sm:text-4xl text-green-400">
+                Payment Successful!
+              </h2>
+              <p className="mt-4 text-gray-400">
+                Your transaction was successful. Your Orion is on its way!
+              </p>
+              <p className="mt-2 text-gray-400">
+                For further information, please contact us at:{" "}
+                <a
+                  href="mailto:orion@dioneprotocol.com"
+                  className="text-purple-500 underline"
+                >
+                  orion@dioneprotocol.com
+                </a>
+              </p>
+              <p className="mt-4 text-gray-300">
+                <span className="font-bold">Transaction Hash:</span>
+                <br />
+                <span className="text-purple-500 break-all">
+                  {transactionHash}
+                </span>
+              </p>
+              <p className="mt-4 text-gray-300">
+                <a
+                  href={`https://testnet.odysseyscan.com/tx/${transactionHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple-500 underline"
+                >
+                  View on Blockchain Explorer
+                </a>
+              </p>
+            </div>
+        )
+        }
+
       </div>
-      
     </section>
-    
+
   );
 };
 
