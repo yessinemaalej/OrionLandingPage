@@ -129,7 +129,7 @@ const Pricing = () => {
 
       // Call payment function
       const transaction = await contract.pay("ORDER123", promoCode.trim(), {
-        value: ethers.parseUnits(discountedAmount?.toString() || fixedPaymentAmount.toString(), "DIONE"),
+        value: ethers.parseUnits(discountedAmount?.toString() || fixedPaymentAmount.toString(), "wei"),
       });
 
       await transaction.wait(); // Wait for the transaction to be mined
@@ -176,10 +176,8 @@ const Pricing = () => {
             {/* Verification Form */}
             <div className="mx-auto max-w-xl text-center">
               <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">Payment Confirmation for ORION Beta Access</h2>
-              <p className="mt-7 text-lg/8 text-gray-500">As part of the ORION Beta Testing Program, <br/>
-                                                    this section facilitates your payment confirmation for your assigned batch.
-                                                    Please proceed with your payment securing your exclusive spot and ensuring the Orion sent out to you.
-                                                    We appreciate your commitment and look forward to your valuable insights as we refine and enhance the ORION experience together!</p>
+              <p className="mt-7 text-lg/8 text-gray-500">  Confirm your spot in the ORION Beta Testing Program by completing your payment. Secure your exclusive device and join us in shaping the future of renewable innovation. Thank you for being part of this journey!
+              </p>
             </div>
             <form className="mx-auto max-w-2xl sm:mt-20  p-6 rounded-lg shadow-lg text-gray-200">
                 <div className="w-full">
