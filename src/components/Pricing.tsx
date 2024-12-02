@@ -175,9 +175,9 @@ const Pricing = () => {
 
             {/* Verification Form */}
             <div className="mx-auto max-w-xl text-center">
-              <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">Pre-Payment</h2>
+              <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">Payment Confirmation for ORION Beta Access</h2>
               <p className="mt-7 text-lg/8 text-gray-500">As part of the ORION Beta Testing Program, <br/>
-                                                    this section facilitates your pre-payment confirmation for your assigned batch.
+                                                    this section facilitates your payment confirmation for your assigned batch.
                                                     Please proceed with your payment securing your exclusive spot and ensuring the Orion sent out to you.
                                                     We appreciate your commitment and look forward to your valuable insights as we refine and enhance the ORION experience together!</p>
             </div>
