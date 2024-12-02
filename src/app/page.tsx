@@ -13,13 +13,13 @@ import Stats from "@/components/Stats";
 import Pricing from "@/components/Pricing";
 import { WobbleCardDemo} from "@/components/Wobblecard";
 import Feedback from "@/components/Feedback";
-
-
+import AdminContent from "@/components/AdminContent";
 export default function Home() {
   return (
     <>
       {/* <Navbar /> */}
       <Hero />
+      <AdminContent/>
       {/* <LogoTicker /> */}
       <Stats />
       <SparklesPreview />

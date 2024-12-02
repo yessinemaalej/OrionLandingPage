@@ -40,6 +40,12 @@ export const Hero = () => {
             <button className="shadow-[inset_0_0_0_2px_#ffffff] hover:shadow-[inset_0_0_0_2px_#572676] text-white px-12 py-4 rounded-full tracking-widest uppercase font-bold bg-transparent hover:bg-[#572676] hover:text-white dark:text-neutral-200 transition duration-200">
             <a href="https://yu773y9kayu.typeform.com/to/NYY4zLRl?utm_source=xxxxx&utm_medium=xxxxx&utm_campaign=xxxxx&utm_term=xxxxx&utm_content=xxxxx">Join the Beta testing</a>
             </button>
+            </div>
+            <div className="flex justify-center mb-8">
+            <button className="shadow-[inset_0_0_0_2px_#ffffff] hover:shadow-[inset_0_0_0_2px_#572676] text-white px-12 py-4 rounded-full tracking-widest uppercase font-bold bg-transparent hover:bg-[#572676] hover:text-white dark:text-neutral-200 transition duration-200">
+            <a href="https://yu773y9kayu.typeform.com/to/NYY4zLRl?utm_source=xxxxx&utm_medium=xxxxx&utm_campaign=xxxxx&utm_term=xxxxx&utm_content=xxxxx">Get your Orion</a>
+            </button>
+
           </div>
         </div>
     </div>

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { ethers } from "ethers";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import contractJson from "../../smart-contracts/artifacts/contracts/Checkout.sol/Checkout.json";
+import axios from "axios";
 
 declare global {
   interface Window {
@@ -18,6 +19,7 @@ const Pricing = () => {
   const [promoStatus, setPromoStatus] = useState<string | null>(null); // Promo code verification status
   const [discountedAmount, setDiscountedAmount] = useState<number | null>(null); // Discounted payment amount
   const fixedPaymentAmount = 100; // Fixed payment amount in DIONE (for simplicity)
+  const [owner, setOwner] = useState<string>("");
 
   const [shipmentDetails, setShipmentDetails] = useState({
     fullName: "",
@@ -33,7 +35,7 @@ const Pricing = () => {
   // Smart Contract Information
   const contractAddress = "0xBc1CD3b1055aC850C5AB6c9b38D4CA10a713ba77"; // Replace with your contract address
   const contractABI = contractJson.abi;
-  
+
   const addPromoCode = async () => {
     try {
 
@@ -113,27 +115,40 @@ const Pricing = () => {
         alert("MetaMask is not installed. Please install it to proceed.");
         return;
       }
-
+  
       const provider = new ethers.BrowserProvider(window.ethereum);
       const accounts = await provider.send("eth_requestAccounts", []);
       if (!accounts || accounts.length === 0) {
         alert("Please connect your wallet to proceed.");
         return;
       }
-
+  
       setAddress(accounts[0]); // Set the user's wallet address
-
+  
       // Connect to the smart contract
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contractAddress, contractABI, signer);
-
+  
       // Call payment function
       const transaction = await contract.pay("ORDER123", promoCode.trim(), {
-        value: ethers.parseUnits(discountedAmount?.toString() || fixedPaymentAmount.toString(), "DIONE"),
+        value: ethers.parseUnits(discountedAmount?.toString() || fixedPaymentAmount.toString(), "wei"),
       });
-
+  
       await transaction.wait(); // Wait for the transaction to be mined
-
+  
+      // Save user data to MongoDB
+      const userData = {
+        walletAddress: accounts[0],
+        shipmentDetails,
+        shipmentStatus: "Not Shipped",
+        transactionHash: transaction.hash,
+      };
+  
+      await axios.post("http://localhost:5005/api/users", userData);
+      /*await axios.post("http://localhost:5005/api/payment-success", {
+        email: shipmentDetails.email,
+        fullName: shipmentDetails.fullName,
+      });*/
       setTransactionHash(transaction.hash);
       setPaymentSuccess(true);
       alert("Payment successful!");
