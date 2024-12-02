@@ -153,7 +153,7 @@ const Pricing = () => {
 
   return (
     <section className="bg-black min-h-screen text-gray-200 flex items-center justify-center">
-      <div className="max-w-screen-md mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+      <div className="w-full mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         {!paymentSuccess ? (
           <>
             {/* <div className="text-center">
@@ -174,9 +174,9 @@ const Pricing = () => {
             </div> */}
 
             {/* Verification Form */}
-            <div className="mx-auto max-w-xl text-center">
-              <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">Payment Confirmation for ORION Beta Access</h2>
-              <p className="mt-7 text-lg/8 text-gray-500">As part of the ORION Beta Testing Program, <br/>
+            <div className="mx-auto flex flex-col items-center justify-center px-4 sm:px-6 lg-8">
+              <h2 className="text-3xl text-center font-bold sm:text-4xl text-gray-200">Payment Confirmation for ORION Beta Access</h2>
+              <p className="mt-7 max-w-2xl text-center text-gray-500 px-4 sm:px-0">As part of the ORION Beta Testing Program, <br/>
                                                     this section facilitates your payment confirmation for your assigned batch.
                                                     Please proceed with your payment securing your exclusive spot and ensuring the Orion sent out to you.
                                                     We appreciate your commitment and look forward to your valuable insights as we refine and enhance the ORION experience together!</p>
@@ -292,7 +292,6 @@ const Pricing = () => {
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
                     className="min-w-0 flex-auto mt-1 p-2 rounded-md border border-gray-700 bg-white/5 rounded-l-lg focus:border-purple-500 focus:outline-none"
-                    placeholder="Enter your promo code"
                   />
                   <button
                     type="button"
