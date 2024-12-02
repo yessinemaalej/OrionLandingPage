@@ -33,7 +33,7 @@ const Pricing = () => {
   });
 
   // Smart Contract Information
-  const contractAddress = "0xBc1CD3b1055aC850C5AB6c9b38D4CA10a713ba77"; // Replace with your contract address
+  const contractAddress = "0xAb8776314BC70952E45A2E1a24418AadA6FF9138"; // Replace with your contract address
   const contractABI = contractJson.abi;
 
   const addPromoCode = async () => {
@@ -171,7 +171,7 @@ const Pricing = () => {
       <div className="max-w-screen-md mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         {!paymentSuccess ? (
           <>
-            <div className="text-center">
+            {/* <div className="text-center">
               <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">
                 Pre-Payment
               </h2>
@@ -186,152 +186,164 @@ const Pricing = () => {
                 Select between paying with DIONE tokens or a different payment
                 method based on your preference.
               </p>
-            </div>
+            </div> */}
 
             {/* Verification Form */}
-            <form className="space-y-4 bg-gray-800 p-6 rounded-lg shadow-lg text-gray-200">
-              <div>
-                <label className="block text-sm font-medium">Full Name</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  value={shipmentDetails.fullName}
-                  onChange={handleChange}
-                  className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-lg focus:border-purple-500 focus:outline-none"
-                  placeholder="Your full name"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={shipmentDetails.email}
-                  onChange={handleChange}
-                  className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-lg focus:border-purple-500 focus:outline-none"
-                  placeholder="Your email address"
-                />
-              </div>
-
-              {/* Shipment Address Details */}
-              <div>
-                <label className="block text-sm font-medium">Country</label>
-                <input
-                  type="text"
-                  name="country"
-                  value={shipmentDetails.country}
-                  onChange={handleChange}
-                  className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-lg focus:border-purple-500 focus:outline-none"
-                  placeholder="Country"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium">City</label>
-                <input
-                  type="text"
-                  name="city"
-                  value={shipmentDetails.city}
-                  onChange={handleChange}
-                  className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-lg focus:border-purple-500 focus:outline-none"
-                  placeholder="City"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium">ZIP Code</label>
-                <input
-                  type="text"
-                  name="zipCode"
-                  value={shipmentDetails.zipCode}
-                  onChange={handleChange}
-                  className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-lg focus:border-purple-500 focus:outline-none"
-                  placeholder="ZIP Code"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium">
-                  Address Line 1
-                </label>
-                <input
-                  type="text"
-                  name="addressLine1"
-                  value={shipmentDetails.addressLine1}
-                  onChange={handleChange}
-                  className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-lg focus:border-purple-500 focus:outline-none"
-                  placeholder="Address Line 1"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium">
-                  Address Line 2 (Optional)
-                </label>
-                <input
-                  type="text"
-                  name="addressLine2"
-                  value={shipmentDetails.addressLine2}
-                  onChange={handleChange}
-                  className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-lg focus:border-purple-500 focus:outline-none"
-                  placeholder="Address Line 2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  name="phoneNumber"
-                  value={shipmentDetails.phoneNumber}
-                  onChange={handleChange}
-                  className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-lg focus:border-purple-500 focus:outline-none"
-                  placeholder="Phone Number"
-                />
-              </div>
-              <div>
-            <label className="block text-sm font-medium">Promo Code (Optional)</label>
-            <div className="flex items-center">
-              <input
-                type="text"
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value)}
-                className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-l-lg focus:border-purple-500 focus:outline-none"
-                placeholder="Enter your promo code"
-              />
-              <button
-                type="button"
-                onClick={verifyPromoCode}
-                className="ml-2 px-4 py-2 bg-green-500 text-white rounded-r-lg hover:bg-green-600 focus:outline-none"
-              >
-                Verify
-              </button>
-            </div>
-            {promoStatus && (
-              <p className={`mt-2 ${promoStatus.includes("valid") ? "text-green-400" : "text-red-400"}`}>
-                {promoStatus}
+            <div className="mx-auto max-w-xl text-center">
+              <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">Payment Confirmation for ORION Beta Access</h2>
+              <p className="mt-7 text-lg/8 text-gray-500">  Confirm your spot in the ORION Beta Testing Program by completing your payment. Secure your exclusive device and join us in shaping the future of renewable innovation. Thank you for being part of this journey!
               </p>
+            </div>
+            <form className="mx-auto max-w-2xl sm:mt-20  p-6 rounded-lg shadow-lg text-gray-200">
+                <div className="w-full">
+                  <label className="block text-sm/6 font-semibold text-gray-300 ">Full Name</label>
+                  <div className="mt-2.5">
+                    <input
+                    type="text"
+                    name="fullName"
+                    value={shipmentDetails.fullName}
+                    onChange={handleChange}
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg  focus:border-purple-500 focus:outline-none text-gray-400"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">Email</label>
+                  <div className="mt-2.5">
+                    <input
+                    type="email"
+                    name="email"
+                    value={shipmentDetails.email}
+                    onChange={handleChange}
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none text-gray-400"
+                  />
+                  </div>
+                </div>
+
+                {/* Shipment Address Details */}
+                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                  <div>
+                    <label className="block mt-3 text-sm/6 font-semibold text-gray-300">Country</label>
+                    <input
+                      type="text"
+                      name="country"
+                      value={shipmentDetails.country}
+                      onChange={handleChange}
+                      className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">City</label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={shipmentDetails.city}
+                    onChange={handleChange}
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                  />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                  <div>
+                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                    Address Line 1
+                  </label>
+                  <input
+                    type="text"
+                    name="addressLine1"
+                    value={shipmentDetails.addressLine1}
+                    onChange={handleChange}
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                  />
+                  </div>
+                  <div>
+                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                    Address Line 2 (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    name="addressLine2"
+                    value={shipmentDetails.addressLine2}
+                    onChange={handleChange}
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                  />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                  <div>
+                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">ZIP Code</label>
+                  <input
+                    type="text"
+                    name="zipCode"
+                    value={shipmentDetails.zipCode}
+                    onChange={handleChange}
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                  />
+                  </div>
+                  <div>
+                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    name="phoneNumber"
+                    value={shipmentDetails.phoneNumber}
+                    onChange={handleChange}
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                  />
+                  </div>
+                </div>
+
+                
+                <div>
+                <label className="block mt-3 text-sm/6 font-semibold text-gray-300">Promo Code (Optional)</label>
+                <div className="flex gap-x-4">
+                  <input
+                    type="text"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    className="min-w-0 flex-auto mt-1 p-2 rounded-md border border-gray-700 bg-white/5 rounded-l-lg focus:border-purple-500 focus:outline-none"
+                    placeholder="Enter your promo code"
+                  />
+                  <button
+                    type="button"
+                    onClick={verifyPromoCode}
+                    className="flex-none rounded-md bg-indigo-500 px-5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500e"
+                  >
+                    Verify
+                  </button>
+                </div>
+
+              
+
+              {promoStatus && (
+                <p className={`mt-2 ${promoStatus.includes("valid") ? "text-green-400" : "text-red-400"}`}>
+                  {promoStatus}
+                </p>
+              )}
+            </div>
+
+            {discountedAmount !== null && (
+              <div>
+                <p className="text-sm font-medium text-green-400">
+                  Your discounted payment amount: {discountedAmount} DIONE
+                </p>
+              </div>
             )}
-          </div>
-
-          {discountedAmount !== null && (
-            <div>
-              <p className="text-sm font-medium text-green-400">
-                Your discounted payment amount: {discountedAmount} DIONE
-              </p>
-            </div>
-          )}
-              <button
-                type="button"
-                onClick={handlePayment}
-                className="w-full py-2 mt-4 font-semibold text-black bg-purple-500 rounded-lg hover:bg-purple-600 focus:outline-none"
-              >
-                Proceed with Payment
-              </button>
+                <button
+                  type="button"
+                  onClick={handlePayment}
+                  className="w-full mt-7 p-[3px] relative"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+                  <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+                    Proceed with Payment
+                  </div>
+                </button>
             </form>
+            
           </>
         ) : (
           <div className="text-center">
@@ -370,7 +382,9 @@ const Pricing = () => {
           </div>
         )}
       </div>
+      
     </section>
+    
   );
 };
 
