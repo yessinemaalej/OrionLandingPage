@@ -26,10 +26,9 @@ export default function Home() {
       <SparklesPreview />
       <Features />
       {/* <Introduction /> */}
-      <LogoTicker />
+      {/* <LogoTicker /> */}
       <ProductShowcase />
       {/* <WobbleCardDemo /> */}
-      
       <Feedback />
       <CallToAction />
       

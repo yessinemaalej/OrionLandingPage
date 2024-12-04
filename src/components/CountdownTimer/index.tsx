@@ -1,5 +1,5 @@
 "use client"
-import {useState,useEffect} from 'react';
+import {useState,useEffect,useCallback} from 'react';
 import styles from '@/components/CountdownTimer/CountdownTimer.module.scss'
 
 interface CountdownTimerProps{
@@ -19,6 +19,21 @@ const INITIAL_TIME_LEFT = {days:0, hr:0, mins:0, secs:0}
 function CountdownTimer({deadline,title}: CountdownTimerProps) {
     const [timeLeft, setTimeLeft] = useState<CountdownTimeLeft>(INITIAL_TIME_LEFT)
 
+    const calculateTimeLeft = useCallback((): CountdownTimeLeft => {
+        let currentDate = new Date();
+        let difference = deadline.getTime() - currentDate.getTime();
+
+        if (difference > 0) {
+            return {
+                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                minutes: Math.floor((difference / 1000 / 60) % 60),
+                seconds: Math.floor((difference / 1000) % 60)
+            }
+        }        
+        return {};
+    }, [deadline]);
+
     useEffect(() => {
         setTimeLeft(calculateTimeLeft())
         
@@ -28,23 +43,25 @@ function CountdownTimer({deadline,title}: CountdownTimerProps) {
 
         return () => clearInterval(timer);
 
-    },[])
+    },[calculateTimeLeft])
 
-    function calculateTimeLeft() : CountdownTimeLeft {
-        let timeLeft : CountdownTimeLeft = {};
-        let currentDate = new Date();
-        let difference = deadline.getTime() - currentDate.getTime();
 
-        if (difference > 0) {
-            timeLeft = {
-                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                minutes: Math.floor((difference / 1000 / 60) % 60),
-                seconds: Math.floor((difference / 1000) % 60)
-            }
-        }        
-        return timeLeft;
-    }
+
+    // function calculateTimeLeft() : CountdownTimeLeft {
+    //     let timeLeft : CountdownTimeLeft = {};
+    //     let currentDate = new Date();
+    //     let difference = deadline.getTime() - currentDate.getTime();
+
+    //     if (difference > 0) {
+    //         timeLeft = {
+    //             days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+    //             hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+    //             minutes: Math.floor((difference / 1000 / 60) % 60),
+    //             seconds: Math.floor((difference / 1000) % 60)
+    //         }
+    //     }        
+    //     return timeLeft;
+    // }
   
     return (
     <div className={styles.container}>

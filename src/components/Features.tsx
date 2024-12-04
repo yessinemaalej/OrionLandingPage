@@ -62,7 +62,7 @@ const Features = () => {
         <h2 className="mt-4 text-xl font-bold text-white">Global Connectivity</h2>
 
         <p className="mt-1 text-sm text-gray-300">
-        Comprehensive Coverage: Orion utilizes Starlink's satellite network to provide continuous
+        Comprehensive Coverage: Orion utilizes Starlink&apos;s satellite network to provide continuous
         connectivity in remote and underserved areas, ensuring global reach and decentralization for the Dione blockchain.
 
         </p>
