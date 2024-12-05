@@ -10,7 +10,7 @@ export const Hero = () => {
   return (
     <div
       id="hero"
-      className="bg-black min-h-screen text-white bg-[linear-gradient(to_bottom,#000,#200D42_40%,#4F21A1_59%,#000_82%)] py-[72px] sm:py-24 relative overflow-clip"
+      className="bg-black text-white bg-[linear-gradient(to_bottom,#000,#200D42_40%,#4F21A1_59%,#000_82%)] py-[72px] sm:py-24 relative overflow-clip"
     >
       {/* <div className="flex items-center justify-center">
           <a href="#" className="inline-flex gap-3 border py-1 px-2 rounded-lg border-white/30">
@@ -27,9 +27,9 @@ export const Hero = () => {
         <h1 className="text-4xl sm:text-7xl font-bold tracking-tighter text-center mt-8 inline-flex">
           Empower Your Future with ORION
         </h1></div>
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-5">
 
-        <h1 className="text-4xl sm:text-7xl font-bold tracking-tighter text-center mt-8 inline-flex">
+        <h1 className="text-4xl sm:text-7xl font-bold tracking-tighter text-center mt-8 mb-10 inline-flex">
           Your Gateway to Renewable Innovation!
         </h1>
       </div>

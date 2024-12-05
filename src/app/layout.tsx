@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning={true}>
-      <body className={clsx(inter.className, "antialiased")}>
+      <body className={clsx(inter.className, "antialiased","bg-black")}>
       <Banner />
       <Header />
             <main>{children}</main>
