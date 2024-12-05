@@ -38,6 +38,7 @@ const Pricing = () => {
   const contractAddress = "0xBc1CD3b1055aC850C5AB6c9b38D4CA10a713ba77"; // Replace with your contract address
   const contractABI = contractJson.abi;
 
+
   const addPromoCode = async () => {
     try {
       // Check wallet connection
@@ -79,11 +80,13 @@ const Pricing = () => {
         return;
       }
 
+
       // Check wallet connection
       if (!window.ethereum) {
         setPromoStatus("MetaMask is not installed.");
         return;
       }
+
 
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
@@ -96,11 +99,14 @@ const Pricing = () => {
       // Check the discount for the provided promo code
       const discount = await contract.promoCodes(promoCode);
 
+
       console.log(promoCode);
       console.log(discount.toString()); // Ensure `discount` is converted to a string for logging
 
+
       // Convert `discount` from BigInt to a number for calculations
       const discountValue = Number(discount);
+
 
       if (discountValue > 0) {
         const discountedPayment =
@@ -190,7 +196,8 @@ const Pricing = () => {
 
   return (
     <section className="bg-black min-h-screen text-gray-200 flex items-center justify-center">
-      <div className="max-w-screen-md mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+      <div className="w-full mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+
         {!paymentSuccess ? (
           <>
             {/* <div className="text-center">
@@ -432,42 +439,44 @@ const Pricing = () => {
               </button>
             </form>
           </>
-        ) : (
-          <div className="text-center">
-            <h2 className="text-3xl font-bold sm:text-4xl text-green-400">
-              Payment Successful!
-            </h2>
-            <p className="mt-4 text-gray-400">
-              Your transaction was successful. Your Orion is on its way!
-            </p>
-            <p className="mt-2 text-gray-400">
-              For further information, please contact us at:{" "}
-              <a
-                href="mailto:orion@dioneprotocol.com"
-                className="text-purple-500 underline"
-              >
-                orion@dioneprotocol.com
-              </a>
-            </p>
-            <p className="mt-4 text-gray-300">
-              <span className="font-bold">Transaction Hash:</span>
-              <br />
-              <span className="text-purple-500 break-all">
-                {transactionHash}
-              </span>
-            </p>
-            <p className="mt-4 text-gray-300">
-              <a
-                href={`https://testnet.odysseyscan.com/tx/${transactionHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-purple-500 underline"
-              >
-                View on Blockchain Explorer
-              </a>
-            </p>
-          </div>
-        )}
+            ) : (
+            <div className="text-center">
+              <h2 className="text-3xl font-bold sm:text-4xl text-green-400">
+                Payment Successful!
+              </h2>
+              <p className="mt-4 text-gray-400">
+                Your transaction was successful. Your Orion is on its way!
+              </p>
+              <p className="mt-2 text-gray-400">
+                For further information, please contact us at:{" "}
+                <a
+                  href="mailto:orion@dioneprotocol.com"
+                  className="text-purple-500 underline"
+                >
+                  orion@dioneprotocol.com
+                </a>
+              </p>
+              <p className="mt-4 text-gray-300">
+                <span className="font-bold">Transaction Hash:</span>
+                <br />
+                <span className="text-purple-500 break-all">
+                  {transactionHash}
+                </span>
+              </p>
+              <p className="mt-4 text-gray-300">
+                <a
+                  href={`https://testnet.odysseyscan.com/tx/${transactionHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple-500 underline"
+                >
+                  View on Blockchain Explorer
+                </a>
+              </p>
+            </div>
+        )
+        }
+
       </div>
     </section>
   );
