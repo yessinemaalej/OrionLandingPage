@@ -22,7 +22,7 @@ const Pricing = () => {
   const [discountedAmount, setDiscountedAmount] = useState<number | null>(null); // Discounted payment amount
   const fixedPaymentAmount = 100; // Fixed payment amount in DIONE (for simplicity)
   const [owner, setOwner] = useState<string>("");
-
+  const smartContract = process.env.SMART_CONTRACT_ADDRESS;
   const [shipmentDetails, setShipmentDetails] = useState({
     fullName: "",
     email: "",
@@ -35,7 +35,7 @@ const Pricing = () => {
   });
 
   // Smart Contract Information
-  const contractAddress = "0xBc1CD3b1055aC850C5AB6c9b38D4CA10a713ba77"; // Replace with your contract address
+  //const smartContract = process.env.SMART_CONTRACT_ADDRESS; // Replace with your contract address
   const contractABI = contractJson.abi;
 
 
@@ -50,7 +50,7 @@ const Pricing = () => {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(
-        contractAddress,
+        smartContract,
         contractABI,
         signer
       );
@@ -91,7 +91,7 @@ const Pricing = () => {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(
-        contractAddress,
+        smartContract,
         contractABI,
         signer
       );
@@ -147,7 +147,7 @@ const Pricing = () => {
       // Connect to the smart contract
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(
-        contractAddress,
+        smartContract,
         contractABI,
         signer
       );

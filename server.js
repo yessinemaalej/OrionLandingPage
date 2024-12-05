@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+require("dotenv").config(); // Load environment variables
 
 // Initialize the app
 const app = express();
@@ -16,8 +17,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: "yessinemaalej002@gmail.com", 
-    pass: "yugtuhchocrudlbd", 
+    user: process.env.NODEMAILER, 
+    pass: process.env.NODE_MAILER_PASS, 
   },
 });
 
@@ -154,7 +155,7 @@ const sendEmail = async (email, fullName) => {
   }
 };
 // MongoDB connection
-const dbURI = "mongodb+srv://yessine:dbpass@cluster0.iivvj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const dbURI = process.env.MONGODB_URI;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error(err));
