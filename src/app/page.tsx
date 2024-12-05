@@ -18,8 +18,9 @@ export default function Home() {
   return (
     <>
       {/* <Navbar /> */}
-      <Hero />
+      
       <AdminContent/>
+      <Hero />
       <Pricing />
       {/* <LogoTicker /> */}
       <Stats />

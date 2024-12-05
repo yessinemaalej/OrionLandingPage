@@ -13,6 +13,8 @@ declare global {
 const AdminContent = () => {
   const [owner, setOwner] = useState<string>("");
   const [payers, setPayers] = useState<string[]>([]);
+  const [withdrawStatus, setWithdrawStatus] = useState<string>("");
+
   const [promoCodes, setPromoCodes] = useState<
     { code: string; discount: number }[]
   >([]);
@@ -60,6 +62,22 @@ const [selectedUser, setSelectedUser] = useState<string | null>(null); // Curren
       return "0";
     }
   };
+  const withdrawFunds = async () => {
+    try {
+      setWithdrawStatus("Processing...");
+      const contract = await connectToContract();
+
+      const transaction = await contract?.withdraw(); // Call the withdraw function
+      await transaction.wait(); // Wait for the transaction to be mined
+
+      setWithdrawStatus("Funds withdrawn successfully!");
+      fetchContractBalance(contractAddress); // Refresh the balance after withdrawal
+    } catch (error: any) {
+      console.error("Error withdrawing funds:", error);
+      setWithdrawStatus(error.reason || "Withdrawal failed.");
+    }
+  };
+
   const updateShipmentStatus = async () => {
     if (!selectedUser) return;
 
@@ -211,10 +229,24 @@ const fetchUsers = async () => {
           </div>
           <div className="bg-purple-700 p-6 rounded-lg shadow-lg text-center">
             <h2 className="text-2xl font-bold mb-2">Total Revenue</h2>
-            <p className="text-4xl font-extrabold">
-              {" "}
-              {contractBalance} DIONE
-            </p>
+            <p className="text-4xl font-extrabold">{contractBalance} DIONE</p>
+            <button
+              onClick={withdrawFunds}
+              className="mt-4 bg-green-500 px-4 py-2 rounded-lg hover:bg-green-600"
+            >
+              Withdraw Funds
+            </button>
+            {withdrawStatus && (
+              <p
+                className={`mt-2 ${
+                  withdrawStatus.includes("successfully")
+                    ? "text-green-400"
+                    : "text-red-400"
+                }`}
+              >
+                {withdrawStatus}
+              </p>
+            )}
           </div>
         </section>
 

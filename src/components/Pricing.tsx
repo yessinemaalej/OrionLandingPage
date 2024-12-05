@@ -4,7 +4,9 @@ import { ethers } from "ethers";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import contractJson from "../../smart-contracts/artifacts/contracts/Checkout.sol/Checkout.json";
 import axios from "axios";
-
+import { countries } from "countries-list";
+import "react-phone-input-2/lib/style.css";
+import PhoneInput from "react-phone-input-2";
 declare global {
   interface Window {
     ethereum?: MetaMaskInpageProvider;
@@ -33,12 +35,11 @@ const Pricing = () => {
   });
 
   // Smart Contract Information
-  const contractAddress = "0xAb8776314BC70952E45A2E1a24418AadA6FF9138"; // Replace with your contract address
+  const contractAddress = "0xBc1CD3b1055aC850C5AB6c9b38D4CA10a713ba77"; // Replace with your contract address
   const contractABI = contractJson.abi;
 
   const addPromoCode = async () => {
     try {
-
       // Check wallet connection
       if (!window.ethereum) {
         setPromoStatus("MetaMask is not installed.");
@@ -47,7 +48,11 @@ const Pricing = () => {
 
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, contractABI, signer);
+      const contract = new ethers.Contract(
+        contractAddress,
+        contractABI,
+        signer
+      );
 
       // Check the discount for the provided promo code
       try {
@@ -65,7 +70,7 @@ const Pricing = () => {
     }
   };
 
-  addPromoCode()
+  addPromoCode();
 
   const verifyPromoCode = async () => {
     try {
@@ -73,26 +78,30 @@ const Pricing = () => {
         setPromoStatus("Please enter a promo code to verify.");
         return;
       }
-  
+
       // Check wallet connection
       if (!window.ethereum) {
         setPromoStatus("MetaMask is not installed.");
         return;
       }
-  
+
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, contractABI, signer);
-  
+      const contract = new ethers.Contract(
+        contractAddress,
+        contractABI,
+        signer
+      );
+
       // Check the discount for the provided promo code
       const discount = await contract.promoCodes(promoCode);
-  
+
       console.log(promoCode);
       console.log(discount.toString()); // Ensure `discount` is converted to a string for logging
-  
+
       // Convert `discount` from BigInt to a number for calculations
       const discountValue = Number(discount);
-  
+
       if (discountValue > 0) {
         const discountedPayment =
           (fixedPaymentAmount * (100 - discountValue)) / 100;
@@ -110,32 +119,43 @@ const Pricing = () => {
   // Handle Payment
   const handlePayment = async () => {
     try {
+      await axios.post("http://localhost:5005/api/payment-success", {
+        email: shipmentDetails.email,
+        fullName: shipmentDetails.fullName,
+      });
       // Check wallet connection
       if (!window.ethereum) {
         alert("MetaMask is not installed. Please install it to proceed.");
         return;
       }
-  
+
       const provider = new ethers.BrowserProvider(window.ethereum);
       const accounts = await provider.send("eth_requestAccounts", []);
       if (!accounts || accounts.length === 0) {
         alert("Please connect your wallet to proceed.");
         return;
       }
-  
+
       setAddress(accounts[0]); // Set the user's wallet address
-  
+
       // Connect to the smart contract
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, contractABI, signer);
-  
+      const contract = new ethers.Contract(
+        contractAddress,
+        contractABI,
+        signer
+      );
+
       // Call payment function
       const transaction = await contract.pay("ORDER123", promoCode.trim(), {
-        value: ethers.parseUnits(discountedAmount?.toString() || fixedPaymentAmount.toString(), "wei"),
+        value: ethers.parseUnits(
+          discountedAmount?.toString() || fixedPaymentAmount.toString(),
+          "wei"
+        ),
       });
-  
+
       await transaction.wait(); // Wait for the transaction to be mined
-  
+
       // Save user data to MongoDB
       const userData = {
         walletAddress: accounts[0],
@@ -143,12 +163,9 @@ const Pricing = () => {
         shipmentStatus: "Not Shipped",
         transactionHash: transaction.hash,
       };
-  
+
       await axios.post("http://localhost:5005/api/users", userData);
-      /*await axios.post("http://localhost:5005/api/payment-success", {
-        email: shipmentDetails.email,
-        fullName: shipmentDetails.fullName,
-      });*/
+
       setTransactionHash(transaction.hash);
       setPaymentSuccess(true);
       alert("Payment successful!");
@@ -165,6 +182,11 @@ const Pricing = () => {
     const { name, value } = e.target;
     setShipmentDetails((prev) => ({ ...prev, [name]: value }));
   };
+
+  const countryOptions = Object.entries(countries).map(([code, country]) => ({
+    code,
+    name: country.name,
+  }));
 
   return (
     <section className="bg-black min-h-screen text-gray-200 flex items-center justify-center">
@@ -190,50 +212,71 @@ const Pricing = () => {
 
             {/* Verification Form */}
             <div className="mx-auto max-w-xl text-center">
-              <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">Payment Confirmation for ORION Beta Access</h2>
-              <p className="mt-7 text-lg/8 text-gray-500">  Confirm your spot in the ORION Beta Testing Program by completing your payment. Secure your exclusive device and join us in shaping the future of renewable innovation. Thank you for being part of this journey!
+              <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">
+                Payment Confirmation for ORION Beta Access
+              </h2>
+              <p className="mt-7 text-lg/8 text-gray-500">
+                {" "}
+                Confirm your spot in the ORION Beta Testing Program by
+                completing your payment. Secure your exclusive device and join
+                us in shaping the future of renewable innovation. Thank you for
+                being part of this journey!
               </p>
             </div>
             <form className="mx-auto max-w-2xl sm:mt-20  p-6 rounded-lg shadow-lg text-gray-200">
-                <div className="w-full">
-                  <label className="block text-sm/6 font-semibold text-gray-300 ">Full Name</label>
-                  <div className="mt-2.5">
-                    <input
+              <div className="w-full">
+                <label className="block text-sm/6 font-semibold text-gray-300 ">
+                  Full Name
+                </label>
+                <div className="mt-2.5">
+                  <input
                     type="text"
                     name="fullName"
                     value={shipmentDetails.fullName}
                     onChange={handleChange}
                     className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg  focus:border-purple-500 focus:outline-none text-gray-400"
-                    />
-                  </div>
+                  />
                 </div>
-                <div>
-                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">Email</label>
-                  <div className="mt-2.5">
-                    <input
+              </div>
+              <div>
+                <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                  Email
+                </label>
+                <div className="mt-2.5">
+                  <input
                     type="email"
                     name="email"
                     value={shipmentDetails.email}
                     onChange={handleChange}
                     className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none text-gray-400"
                   />
-                  </div>
                 </div>
+              </div>
 
-                {/* Shipment Address Details */}
-                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-                  <div>
-                    <label className="block mt-3 text-sm/6 font-semibold text-gray-300">Country</label>
-                    <input
-                      type="text"
-                      name="country"
-                      value={shipmentDetails.country}
-                      onChange={handleChange}
-                      className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
-                    />
-                  </div>
-                  <div>
-                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">City</label>
+              {/* Shipment Address Details */}
+              <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                <div>
+                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                    Country
+                  </label>
+                  <select
+                    name="country"
+                    value={shipmentDetails.country}
+                    onChange={handleChange}
+                    className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-lg focus:border-purple-500 focus:outline-none"
+                  >
+                    <option value="">Select Country</option>
+                    {countryOptions.map((country) => (
+                      <option key={country.code} value={country.code}>
+                        {country.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                    City
+                  </label>
                   <input
                     type="text"
                     name="city"
@@ -241,11 +284,11 @@ const Pricing = () => {
                     onChange={handleChange}
                     className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
                   />
-                  </div>
                 </div>
-                
-                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-                  <div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                <div>
                   <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
                     Address Line 1
                   </label>
@@ -256,8 +299,8 @@ const Pricing = () => {
                     onChange={handleChange}
                     className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
                   />
-                  </div>
-                  <div>
+                </div>
+                <div>
                   <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
                     Address Line 2 (Optional)
                   </label>
@@ -268,12 +311,14 @@ const Pricing = () => {
                     onChange={handleChange}
                     className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
                   />
-                  </div>
                 </div>
+              </div>
 
-                <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-                  <div>
-                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">ZIP Code</label>
+              <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                <div>
+                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                    ZIP Code
+                  </label>
                   <input
                     type="text"
                     name="zipCode"
@@ -281,24 +326,63 @@ const Pricing = () => {
                     onChange={handleChange}
                     className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
                   />
-                  </div>
-                  <div>
-                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    name="phoneNumber"
-                    value={shipmentDetails.phoneNumber}
-                    onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
-                  />
-                  </div>
                 </div>
-
-                
                 <div>
-                <label className="block mt-3 text-sm/6 font-semibold text-gray-300">Promo Code (Optional)</label>
+  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+    Phone Number
+  </label>
+  <PhoneInput
+  country={shipmentDetails.country.toLowerCase() || "us"} // Sync with country dropdown
+  value={shipmentDetails.phoneNumber}
+  onChange={(value, countryData) =>
+    setShipmentDetails((prev) => ({
+      ...prev,
+      phoneNumber: value,
+      country: countryData?.countryCode.toUpperCase(), // Sync with phone input
+    }))
+  }
+  inputStyle={{
+    width: "100%",
+    height: "42px", // Match height with other input fields
+    backgroundColor: "#0a0a0a", // Match background
+    color: "#f0f0f0", // Match text color
+    border: "1px solid #333333", // Match border style
+    borderRadius: "6px", // Match rounded corners
+    paddingLeft: "65px", // Ensure padding for flag dropdown
+    fontSize: "16px", // Match font size
+    boxShadow: "0 0 5px rgba(255, 255, 255, 0.1)", // Subtle shadow for a polished look
+  }}
+  containerStyle={{
+    width: "100%",
+    position: "relative", // For better control of flag position
+  }}
+  buttonStyle={{
+    backgroundColor: "transparent", // Transparent to blend with input
+    border: "none", // Remove default border
+    position: "absolute", // Position it over input
+    left: "10px", // Align flag within the input
+    top: "50%", // Center vertically
+    transform: "translateY(-50%)", // Center vertically
+    height: "24px", // Adjust flag size
+    width: "24px", // Adjust flag size
+    pointerEvents: "none", // Prevent flag from being clickable
+  }}
+  dropdownStyle={{
+    backgroundColor: "#0a0a0a", // Match dropdown with background
+    color: "#f0f0f0", // Match text color
+    border: "1px solid #333333", // Match dropdown border
+    borderRadius: "6px", // Match rounded corners
+    zIndex: 1000, // Ensure it appears above other elements
+  }}
+  placeholder="Enter your phone number"
+/>
+</div>
+              </div>
+
+              <div>
+                <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                  Promo Code (Optional)
+                </label>
                 <div className="flex gap-x-4">
                   <input
                     type="text"
@@ -316,34 +400,37 @@ const Pricing = () => {
                   </button>
                 </div>
 
-              
-
-              {promoStatus && (
-                <p className={`mt-2 ${promoStatus.includes("valid") ? "text-green-400" : "text-red-400"}`}>
-                  {promoStatus}
-                </p>
-              )}
-            </div>
-
-            {discountedAmount !== null && (
-              <div>
-                <p className="text-sm font-medium text-green-400">
-                  Your discounted payment amount: {discountedAmount} DIONE
-                </p>
+                {promoStatus && (
+                  <p
+                    className={`mt-2 ${
+                      promoStatus.includes("valid")
+                        ? "text-green-400"
+                        : "text-red-400"
+                    }`}
+                  >
+                    {promoStatus}
+                  </p>
+                )}
               </div>
-            )}
-                <button
-                  type="button"
-                  onClick={handlePayment}
-                  className="w-full mt-7 p-[3px] relative"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
-                  <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
-                    Proceed with Payment
-                  </div>
-                </button>
+
+              {discountedAmount !== null && (
+                <div>
+                  <p className="text-sm font-medium text-green-400">
+                    Your discounted payment amount: {discountedAmount} DIONE
+                  </p>
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={handlePayment}
+                className="w-full mt-7 p-[3px] relative"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+                <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+                  Proceed with Payment
+                </div>
+              </button>
             </form>
-            
           </>
         ) : (
           <div className="text-center">
@@ -382,9 +469,7 @@ const Pricing = () => {
           </div>
         )}
       </div>
-      
     </section>
-    
   );
 };
 
