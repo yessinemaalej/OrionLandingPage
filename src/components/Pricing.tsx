@@ -22,7 +22,7 @@ const Pricing = () => {
   const [discountedAmount, setDiscountedAmount] = useState<number | null>(null); // Discounted payment amount
   const fixedPaymentAmount = 100; // Fixed payment amount in DIONE (for simplicity)
   const [owner, setOwner] = useState<string>("");
-  const smartContract = process.env.SMART_CONTRACT_ADDRESS;
+  const smartContract = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS;
   const [shipmentDetails, setShipmentDetails] = useState({
     fullName: "",
     email: "",
@@ -35,7 +35,7 @@ const Pricing = () => {
   });
 
   // Smart Contract Information
-  //const smartContract = process.env.SMART_CONTRACT_ADDRESS; // Replace with your contract address
+  //const smartContract = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS; // Replace with your contract address
   const contractABI = contractJson.abi;
 
 
@@ -60,7 +60,7 @@ const Pricing = () => {
         const codes = await contract.getAllPromoCodes();
 
         // Ensure the data is properly formatted into a plain array
-        const formattedCodes = codes.map((code) => code.toString());
+        const formattedCodes = codes.map((code: { toString: () => any; }) => code.toString());
         console.log("Promo Codes:", formattedCodes);
       } catch (error) {
         console.error("Error fetching promo codes:", error);
@@ -182,11 +182,12 @@ const Pricing = () => {
   };
 
   // Handle Form Input Changes
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setShipmentDetails((prev) => ({ ...prev, [name]: value }));
+    setShipmentDetails((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const countryOptions = Object.entries(countries).map(([code, country]) => ({
@@ -334,13 +335,15 @@ const Pricing = () => {
   <PhoneInput
   country={shipmentDetails.country.toLowerCase() || "us"} // Sync with country dropdown
   value={shipmentDetails.phoneNumber}
-  onChange={(value, countryData) =>
-    setShipmentDetails((prev) => ({
-      ...prev,
-      phoneNumber: value,
-      country: countryData?.countryCode.toUpperCase(), // Sync with phone input
-    }))
-  }
+  onChange={(value, countryData) => {
+    if (countryData && "countryCode" in countryData) {
+      setShipmentDetails((prev) => ({
+        ...prev,
+        phoneNumber: value,
+        country: countryData.countryCode.toUpperCase(), // Sync with phone input
+      }));
+    }
+  }}
   inputStyle={{
     width: "100%",
     height: "42px", // Match height with other input fields
