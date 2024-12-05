@@ -8,7 +8,7 @@ import ArrowIcon from "@/assets/icons/arrow-w.svg"
 export function SparklesPreview() {
   return (
     <div className="h-auto w-full bg-black flex flex-col items-center justify-center overflow-hidden">
-        <h1 className="mt-10 mb-5 text-3xl font-bold sm:text-4xl text-center text-gray-200 relative z-20">
+        <h1 className="mt-20 mb-5 text-3xl font-bold sm:text-4xl text-center text-gray-200 relative z-20">
         Introducing Orion
         </h1>
         <div className="w-[40rem] h-20 relative">
