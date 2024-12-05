@@ -17,8 +17,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.NODEMAILER, 
-    pass: process.env.NODE_MAILER_PASS, 
+    user: process.env.NODE_MAILER_USER, 
+    pass: process.env.NEXT_PUBLIC_NODE_MAILER_PASS, 
   },
 });
 
@@ -155,7 +155,7 @@ const sendEmail = async (email, fullName) => {
   }
 };
 // MongoDB connection
-const dbURI = process.env.MONGODB_URI;
+const dbURI = process.env.NEXT_PUBLIC_MONGODB_URI;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error(err));

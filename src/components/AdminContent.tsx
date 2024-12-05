@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { ethers } from "ethers";
+import { Eip1193Provider, ethers } from "ethers";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import contractJson from "../../smart-contracts/artifacts/contracts/Checkout.sol/Checkout.json";
+
 import axios from "axios";
 declare global {
     interface Window {
@@ -44,10 +45,10 @@ const [selectedUser, setSelectedUser] = useState<string | null>(null); // Curren
   
   const fetchContractBalance = async (
     contractAddress: string,
-    providerUrl: string = "testnode.dioneprotocol.com/ext/bc/D/rpc" // Replace with the correct provider URL
+    providerUrl: string = process.env.NEXT_PUBLIC_TESTNET_END_POINT as string // Replace with the correct provider URL
   ): Promise<string> => {
     try {
-        const provider = new ethers.BrowserProvider(window.ethereum);
+        const provider = new ethers.BrowserProvider(window.ethereum as Eip1193Provider);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
@@ -77,6 +78,7 @@ const [selectedUser, setSelectedUser] = useState<string | null>(null); // Curren
       setWithdrawStatus(error.reason || "Withdrawal failed.");
     }
   };
+  console.log("Environment variables:", process.env);
 
   const updateShipmentStatus = async () => {
     if (!selectedUser) return;
@@ -112,7 +114,8 @@ const fetchUsers = async () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-  const contractAddress = "0xBc1CD3b1055aC850C5AB6c9b38D4CA10a713ba77"; // Replace with your contract address
+  const contractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS; // Replace with your contract address
+  console.log("ffffffff", contractAddress)
   const contractABI = contractJson.abi;
 
   const connectToContract = async () => {
@@ -131,11 +134,16 @@ const fetchUsers = async () => {
     const contract = await connectToContract();
     const ownerAddress = await contract?.owner();
     setOwner(ownerAddress);
-
+  
     const accounts = await window.ethereum?.request({
       method: "eth_requestAccounts",
-    });
-    setIsOwner(accounts?.[0].toLowerCase() === ownerAddress.toLowerCase());
+    }) as string[]; // Explicitly type the result as a string array.
+  
+    if (accounts && accounts[0]) {
+      setIsOwner(accounts[0].toLowerCase() === ownerAddress.toLowerCase());
+    } else {
+      console.error("No accounts found.");
+    }
   };
 
   const fetchPayers = async () => {
@@ -160,7 +168,7 @@ const fetchUsers = async () => {
           discount: typeof discountValue === 'bigint' ? Number(discountValue) : discountValue,
         };
       })
-      .filter((promo) => promo.discount > 0);
+      .filter((promo: { discount: number; }) => promo.discount > 0);
   
     setPromoCodes(formattedPromoCodes);
   };
