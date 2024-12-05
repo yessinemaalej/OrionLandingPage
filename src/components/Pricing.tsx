@@ -22,7 +22,7 @@ const Pricing = () => {
   const [discountedAmount, setDiscountedAmount] = useState<number | null>(null); // Discounted payment amount
   const fixedPaymentAmount = 100; // Fixed payment amount in DIONE (for simplicity)
   const [owner, setOwner] = useState<string>("");
-
+  const smartContract = process.env.SMART_CONTRACT_ADDRESS;
   const [shipmentDetails, setShipmentDetails] = useState({
     fullName: "",
     email: "",
@@ -35,7 +35,7 @@ const Pricing = () => {
   });
 
   // Smart Contract Information
-  const contractAddress = "0xBc1CD3b1055aC850C5AB6c9b38D4CA10a713ba77"; // Replace with your contract address
+  //const smartContract = process.env.SMART_CONTRACT_ADDRESS; // Replace with your contract address
   const contractABI = contractJson.abi;
 
 
@@ -50,7 +50,7 @@ const Pricing = () => {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(
-        contractAddress,
+        smartContract,
         contractABI,
         signer
       );
@@ -91,7 +91,7 @@ const Pricing = () => {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(
-        contractAddress,
+        smartContract,
         contractABI,
         signer
       );
@@ -147,7 +147,7 @@ const Pricing = () => {
       // Connect to the smart contract
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(
-        contractAddress,
+        smartContract,
         contractABI,
         signer
       );
@@ -195,8 +195,8 @@ const Pricing = () => {
   }));
 
   return (
-    <section className="bg-black min-h-screen text-gray-200 flex items-center justify-center">
-      <div className="w-full mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+    <section className="bg-black mt-20 text-gray-200">
+      <div className="w-full mx-auto sm:px-6 sm:py-15">
 
         {!paymentSuccess ? (
           <>
@@ -218,16 +218,9 @@ const Pricing = () => {
             </div> */}
 
             {/* Verification Form */}
-            <div className="mx-auto max-w-xl text-center">
-              <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">
-                Payment Confirmation for ORION Beta Access
-              </h2>
-              <p className="mt-7 text-lg/8 text-gray-500">
-                {" "}
-                Confirm your spot in the ORION Beta Testing Program by
-                completing your payment. Secure your exclusive device and join
-                us in shaping the future of renewable innovation. Thank you for
-                being part of this journey!
+            <div className="mx-auto mt-20 max-w-xl flex flex-col items-center justify-center text-center">
+              <h2 className="text-3xl mt-5 font-bold sm:text-4xl text-gray-200">Payment Confirmation for ORION Beta Access</h2>
+              <p className="mt-7 text-lg/8 text-gray-500">  Confirm your spot in the ORION Beta Testing Program by completing your payment. Secure your exclusive device and join us in shaping the future of renewable innovation. Thank you for being part of this journey!
               </p>
             </div>
             <form className="mx-auto max-w-2xl sm:mt-20  p-6 rounded-lg shadow-lg text-gray-200">
