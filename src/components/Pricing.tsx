@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { ethers } from "ethers";
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import contractJson from "../../smart-contracts/artifacts/contracts/Checkout.sol/Checkout.json";
+import contractJson from "../Checkout.json";
 import axios from "axios";
 import { countries } from "countries-list";
 import "react-phone-input-2/lib/style.css";

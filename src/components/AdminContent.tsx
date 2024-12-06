@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Eip1193Provider, ethers } from "ethers";
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import contractJson from "../../smart-contracts/artifacts/contracts/Checkout.sol/Checkout.json";
+import contractJson from "../Checkout.json";
 
 import axios from "axios";
 declare global {
