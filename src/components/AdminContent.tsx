@@ -63,6 +63,8 @@ const [selectedUser, setSelectedUser] = useState<string | null>(null); // Curren
       return "0";
     }
   };
+
+
   const withdrawFunds = async () => {
     try {
       setWithdrawStatus("Processing...");
@@ -72,7 +74,7 @@ const [selectedUser, setSelectedUser] = useState<string | null>(null); // Curren
       await transaction.wait(); // Wait for the transaction to be mined
 
       setWithdrawStatus("Funds withdrawn successfully!");
-      fetchContractBalance(contractAddress); // Refresh the balance after withdrawal
+      fetchContractBalance(contractAddress as string); // Refresh the balance after withdrawal
     } catch (error: any) {
       console.error("Error withdrawing funds:", error);
       setWithdrawStatus(error.reason || "Withdrawal failed.");
@@ -106,7 +108,7 @@ const fetchUsers = async () => {
     }
   };
   const fetchBalance = async () => {
-    const balance = await fetchContractBalance(contractAddress);
+    const balance = await fetchContractBalance(contractAddress as string);
     setContractBalance(balance);
   };
 
@@ -115,7 +117,9 @@ const fetchUsers = async () => {
     fetchUsers();
   }, []);
   const contractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS; // Replace with your contract address
-  console.log("ffffffff", contractAddress)
+  if (!contractAddress) {
+    throw new Error("SMART_CONTRACT_ADDRESS is not defined in the environment variables.");
+  }  
   const contractABI = contractJson.abi;
 
   const connectToContract = async () => {
@@ -127,6 +131,7 @@ const fetchUsers = async () => {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signer = await provider.getSigner();
     const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
     return contract;
   };
 

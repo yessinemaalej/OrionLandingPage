@@ -23,6 +23,9 @@ const Pricing = () => {
   const fixedPaymentAmount = 100; // Fixed payment amount in DIONE (for simplicity)
   const [owner, setOwner] = useState<string>("");
   const smartContract = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS;
+  if (!smartContract) {
+    throw new Error("SMART_CONTRACT_ADDRESS is not defined in the environment variables.");
+  }  
   const [shipmentDetails, setShipmentDetails] = useState({
     fullName: "",
     email: "",

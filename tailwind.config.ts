@@ -11,7 +11,7 @@ const config: Config = {
   	extend: {
   		container: {
   			padding: '1rem',
-  			center: 'true'
+  			center: true
   		},
   		colors: {
   			purple1: '#9650DC',
