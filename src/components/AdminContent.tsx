@@ -80,7 +80,6 @@ const [selectedUser, setSelectedUser] = useState<string | null>(null); // Curren
       setWithdrawStatus(error.reason || "Withdrawal failed.");
     }
   };
-  console.log("Environment variables:", process.env);
 
   const updateShipmentStatus = async () => {
     if (!selectedUser) return;
@@ -123,32 +122,42 @@ const fetchUsers = async () => {
   const contractABI = contractJson.abi;
 
   const connectToContract = async () => {
-    if (!window.ethereum) {
-      alert("MetaMask is not installed. Please install it to proceed.");
-      return;
+    try{
+      if (!window.ethereum) {
+        console.log("MetaMask is not installed. Please install it to proceed.");
+        return;
+      }
+  
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, contractABI, signer);
+  
+      return contract;
+    }catch(e){
+      console.log(e)
     }
-
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(contractAddress, contractABI, signer);
-
-    return contract;
+    
   };
 
   const fetchOwner = async () => {
-    const contract = await connectToContract();
-    const ownerAddress = await contract?.owner();
-    setOwner(ownerAddress);
-  
-    const accounts = await window.ethereum?.request({
-      method: "eth_requestAccounts",
-    }) as string[]; // Explicitly type the result as a string array.
-  
-    if (accounts && accounts[0]) {
-      setIsOwner(accounts[0].toLowerCase() === ownerAddress.toLowerCase());
-    } else {
-      console.error("No accounts found.");
+    try{
+      const contract = await connectToContract();
+      const ownerAddress = await contract?.owner();
+      setOwner(ownerAddress);
+    
+      const accounts = await window.ethereum?.request({
+        method: "eth_requestAccounts",
+      }) as string[]; // Explicitly type the result as a string array.
+    
+      if (accounts && accounts[0]) {
+        setIsOwner(accounts[0].toLowerCase() === ownerAddress.toLowerCase());
+      } else {
+        console.error("No accounts found.");
+      }
+    }catch(e){
+      console.log(e)
     }
+    
   };
 
   const fetchPayers = async () => {
@@ -158,6 +167,7 @@ const fetchUsers = async () => {
   };
 
   const fetchPromoCodes = async () => {
+    try{
     const contract = await connectToContract();
     const [codes, discounts] = await contract?.getAllPromoCodes();
   
@@ -176,20 +186,34 @@ const fetchUsers = async () => {
       .filter((promo: { discount: number; }) => promo.discount > 0);
   
     setPromoCodes(formattedPromoCodes);
+    }catch(e){
+      console.log(e)
+    }
+
   };
 
   const addPromoCode = async () => {
-    const contract = await connectToContract();
-    await contract?.setPromoCode(newPromoCode, newPromoDiscount);
-    setNewPromoCode("");
-    setNewPromoDiscount(0);
-    fetchPromoCodes(); // Refresh promo codes
+    try{
+      const contract = await connectToContract();
+      await contract?.setPromoCode(newPromoCode, newPromoDiscount);
+      setNewPromoCode("");
+      setNewPromoDiscount(0);
+      fetchPromoCodes(); // Refresh promo codes
+    }catch(e){
+      console.log(e)
+    }
+    
   };
 
   const removePromoCode = async (code: string) => {
-    const contract = await connectToContract();
-    await contract?.removePromoCode(code);
-    fetchPromoCodes(); // Refresh promo codes
+    try{
+      const contract = await connectToContract();
+      await contract?.removePromoCode(code);
+      fetchPromoCodes(); // Refresh promo codes
+    }catch(e){
+      console.log(e)
+    }
+    
   };
 
   // Listen for account changes

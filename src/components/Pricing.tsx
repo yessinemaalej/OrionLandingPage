@@ -1,31 +1,19 @@
 "use client";
-import React, { useState } from "react";
-import { ethers } from "ethers";
-import { MetaMaskInpageProvider } from "@metamask/providers";
-import contractJson from "../Checkout.json";
-import axios from "axios";
-import { countries } from "countries-list";
-import "react-phone-input-2/lib/style.css";
+
+import React, { useEffect, useState } from "react";
 import PhoneInput from "react-phone-input-2";
-declare global {
-  interface Window {
-    ethereum?: MetaMaskInpageProvider;
-  }
-}
+import { ethers } from "ethers";
+import "react-phone-input-2/lib/style.css";
+import contractJson from "../Checkout.json";
+import { countries } from "countries-list";
+import axios from "axios";
 
 const Pricing = () => {
   const [address, setAddress] = useState<string>(""); // User's wallet address
+
+  const [isClient, setIsClient] = useState(false);
   const [transactionHash, setTransactionHash] = useState<string | null>(null); // Transaction hash
-  const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false); // Payment success status
-  const [promoCode, setPromoCode] = useState<string>(""); // Promo code
-  const [promoStatus, setPromoStatus] = useState<string | null>(null); // Promo code verification status
-  const [discountedAmount, setDiscountedAmount] = useState<number | null>(null); // Discounted payment amount
-  const fixedPaymentAmount = 100; // Fixed payment amount in DIONE (for simplicity)
-  const [owner, setOwner] = useState<string>("");
-  const smartContract = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS;
-  if (!smartContract) {
-    throw new Error("SMART_CONTRACT_ADDRESS is not defined in the environment variables.");
-  }  
+  const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false); 
   const [shipmentDetails, setShipmentDetails] = useState({
     fullName: "",
     email: "",
@@ -36,45 +24,30 @@ const Pricing = () => {
     addressLine2: "",
     phoneNumber: "",
   });
+  const [promoCode, setPromoCode] = useState<string>(""); // Promo code input
+  const [promoStatus, setPromoStatus] = useState<string | null>(null); // Promo code verification status
+  const [discountedAmount, setDiscountedAmount] = useState<number | null>(null); // Discounted payment amount
+  const fixedPaymentAmount = 100; // Fixed payment amount
 
-  // Smart Contract Information
-  //const smartContract = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS; // Replace with your contract address
+  // Smart Contract Details
+  const smartContractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS;
   const contractABI = contractJson.abi;
 
+  useEffect(() => {
+    setIsClient(true); // Ensure client-side rendering
+  }, []);
 
-  const addPromoCode = async () => {
-    try {
-      // Check wallet connection
-      if (!window.ethereum) {
-        setPromoStatus("MetaMask is not installed.");
-        return;
-      }
+  if (!isClient) return null; // Avoid hydration mismatches
 
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(
-        smartContract,
-        contractABI,
-        signer
-      );
-
-      // Check the discount for the provided promo code
-      try {
-        const codes = await contract.getAllPromoCodes();
-
-        // Ensure the data is properly formatted into a plain array
-        const formattedCodes = codes.map((code: { toString: () => any; }) => code.toString());
-        console.log("Promo Codes:", formattedCodes);
-      } catch (error) {
-        console.error("Error fetching promo codes:", error);
-      }
-    } catch (error) {
-      console.error("Error verifying promo code:", error);
-      setPromoStatus("Failed to verify promo code. Please try again.");
-    }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setShipmentDetails((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
-
-  addPromoCode();
 
   const verifyPromoCode = async () => {
     try {
@@ -83,33 +56,24 @@ const Pricing = () => {
         return;
       }
 
-
-      // Check wallet connection
+      // Check if MetaMask is installed
       if (!window.ethereum) {
-        setPromoStatus("MetaMask is not installed.");
+        setPromoStatus("MetaMask is not installed. Please install it.");
         return;
       }
-
 
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(
-        smartContract,
+        smartContractAddress as string,
         contractABI,
         signer
       );
 
-      // Check the discount for the provided promo code
+      // Call the smart contract to get the discount for the promo code
       const discount = await contract.promoCodes(promoCode);
 
-
-      console.log(promoCode);
-      console.log(discount.toString()); // Ensure `discount` is converted to a string for logging
-
-
-      // Convert `discount` from BigInt to a number for calculations
-      const discountValue = Number(discount);
-
+      const discountValue = Number(discount); // Convert BigInt to number
 
       if (discountValue > 0) {
         const discountedPayment =
@@ -118,14 +82,19 @@ const Pricing = () => {
         setPromoStatus(`Promo code is valid! Discount: ${discountValue}%.`);
       } else {
         setDiscountedAmount(null);
-        setPromoStatus("promo code doesn't work.");
+        setPromoStatus("Invalid promo code.");
       }
     } catch (error) {
       console.error("Error verifying promo code:", error);
       setPromoStatus("Failed to verify promo code. Please try again.");
     }
   };
-  // Handle Payment
+
+  const countryOptions = Object.entries(countries).map(([code, country]) => ({
+    code,
+    name: country.name,
+  }));
+
   const handlePayment = async () => {
     try {
       await axios.post("http://localhost:5005/api/payment-success", {
@@ -146,11 +115,15 @@ const Pricing = () => {
       }
 
       setAddress(accounts[0]); // Set the user's wallet address
+      const contractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS; // Replace with your contract address
+      if (!contractAddress) {
+        throw new Error("SMART_CONTRACT_ADDRESS is not defined in the environment variables.");
+      } 
 
       // Connect to the smart contract
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(
-        smartContract,
+        contractAddress,
         contractABI,
         signer
       );
@@ -183,20 +156,6 @@ const Pricing = () => {
       alert("Payment failed. Please try again.");
     }
   };
-
-  // Handle Form Input Changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setShipmentDetails((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const countryOptions = Object.entries(countries).map(([code, country]) => ({
-    code,
-    name: country.name,
-  }));
 
   return (
     <section className="bg-black mt-20 text-gray-200">
