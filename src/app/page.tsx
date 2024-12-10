@@ -14,17 +14,21 @@ import Pricing from "@/components/Pricing";
 import { WobbleCardDemo} from "@/components/Wobblecard";
 import Feedback from "@/components/Feedback";
 import AdminContent from "@/components/AdminContent";
+import { Checkout } from "@/components/Checkout";
 export default function Home() {
   return (
     <>
       {/* <Navbar /> */}
       
       <AdminContent/>
-      <Hero />
+
+      {/*<Hero />*/}
+      <Checkout />
+
       <Pricing />
       {/* <LogoTicker /> */}
       <Stats />
-      <SparklesPreview />
+      {/*x<SparklesPreview />*/}
       <Features />
       {/* <Introduction /> */}
       {/* <LogoTicker /> */}

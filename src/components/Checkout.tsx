@@ -5,13 +5,13 @@ import { SparklesCore } from "@/components/ui/sparkles";
 import ArrowIcon from "@/assets/icons/arrow-w.svg"
 
  
-export function SparklesPreview() {
+export function Checkout() {
   return (
    
     <div className="h-auto w-full bg-black flex flex-col items-center justify-center overflow-hidden">
         
         <h1 className="mt-20 mb-5 text-3xl font-bold sm:text-4xl text-center text-gray-200 relative z-20">
-        Introducing Orion
+        GET YOUR ORION NOW!
         </h1>
         <div className="w-[40rem] h-20 relative">
             {/* Gradients */}
@@ -34,18 +34,16 @@ export function SparklesPreview() {
             <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
         </div>
         <div className="text-center">
-            <p className="mt-4 text-gray-400 ">
-                    ORION, developed by Dione Protocol, is a remote validator designed to withstand even 
-                    the most extreme conditions. <br />It is powered by renewable energy sources and connected through Starlink’s 
-                    global satellite infrastructure, <br />ensuring seamless operation in any location.
-                    ORION integrates with solar panels to harness clean energy,<br />
-                    making it the first truly climate-positive blockchain solution.
-            </p>
+        <p className="mt-7 text-lg/8 text-gray-500">  Confirm your spot in the ORION Beta Testing Program by completing your payment.
+        <br/> Secure your exclusive device and join us in shaping the future of renewable innovation. 
+        <br/>Thank you for being part of this journey!
+</p>
         </div>
         <button className="mt-5 p-[3px] relative">
             <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
             <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
-               <a href="https://orion-10.gitbook.io/orion-whitepaper">Read Whitepaper</a> 
+               <a href="#target"> Payment Confirmation for ORION Beta Access
+               </a> 
             </div>
         </button>
     </div>

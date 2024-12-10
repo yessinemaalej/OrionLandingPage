@@ -13,7 +13,7 @@ const Pricing = () => {
 
   const [isClient, setIsClient] = useState(false);
   const [transactionHash, setTransactionHash] = useState<string | null>(null); // Transaction hash
-  const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false); 
+  const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
   const [shipmentDetails, setShipmentDetails] = useState({
     fullName: "",
     email: "",
@@ -117,8 +117,10 @@ const Pricing = () => {
       setAddress(accounts[0]); // Set the user's wallet address
       const contractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS; // Replace with your contract address
       if (!contractAddress) {
-        throw new Error("SMART_CONTRACT_ADDRESS is not defined in the environment variables.");
-      } 
+        throw new Error(
+          "SMART_CONTRACT_ADDRESS is not defined in the environment variables."
+        );
+      }
 
       // Connect to the smart contract
       const signer = await provider.getSigner();
@@ -160,7 +162,6 @@ const Pricing = () => {
   return (
     <section className="bg-black mt-20 text-gray-200">
       <div className="w-full mx-auto sm:px-6 sm:py-15">
-
         {!paymentSuccess ? (
           <>
             {/* <div className="text-center">
@@ -181,10 +182,10 @@ const Pricing = () => {
             </div> */}
 
             {/* Verification Form */}
-            <div className="mx-auto mt-20 max-w-xl flex flex-col items-center justify-center text-center">
-              <h2 className="text-3xl mt-5 font-bold sm:text-4xl text-gray-200">Payment Confirmation for ORION Beta Access</h2>
-              <p className="mt-7 text-lg/8 text-gray-500">  Confirm your spot in the ORION Beta Testing Program by completing your payment. Secure your exclusive device and join us in shaping the future of renewable innovation. Thank you for being part of this journey!
-              </p>
+            <div id="target" className="mx-auto mt-20 max-w-xl flex flex-col items-center justify-center text-center">
+              <h2 className="text-3xl mt-5 font-bold sm:text-4xl text-gray-200">
+                Please fill this form Carefully!
+              </h2>
             </div>
             <form className="mx-auto max-w-2xl sm:mt-20  p-6 rounded-lg shadow-lg text-gray-200">
               <div className="w-full">
@@ -193,6 +194,7 @@ const Pricing = () => {
                 </label>
                 <div className="mt-2.5">
                   <input
+                    required
                     type="text"
                     name="fullName"
                     value={shipmentDetails.fullName}
@@ -207,6 +209,7 @@ const Pricing = () => {
                 </label>
                 <div className="mt-2.5">
                   <input
+                    required
                     type="email"
                     name="email"
                     value={shipmentDetails.email}
@@ -223,6 +226,7 @@ const Pricing = () => {
                     Country
                   </label>
                   <select
+                    required
                     name="country"
                     value={shipmentDetails.country}
                     onChange={handleChange}
@@ -241,6 +245,7 @@ const Pricing = () => {
                     City
                   </label>
                   <input
+                    required
                     type="text"
                     name="city"
                     value={shipmentDetails.city}
@@ -256,6 +261,7 @@ const Pricing = () => {
                     Address Line 1
                   </label>
                   <input
+                    required
                     type="text"
                     name="addressLine1"
                     value={shipmentDetails.addressLine1}
@@ -268,6 +274,7 @@ const Pricing = () => {
                     Address Line 2 (Optional)
                   </label>
                   <input
+                    required
                     type="text"
                     name="addressLine2"
                     value={shipmentDetails.addressLine2}
@@ -283,6 +290,7 @@ const Pricing = () => {
                     ZIP Code
                   </label>
                   <input
+                    required
                     type="text"
                     name="zipCode"
                     value={shipmentDetails.zipCode}
@@ -291,57 +299,57 @@ const Pricing = () => {
                   />
                 </div>
                 <div>
-  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
-    Phone Number
-  </label>
-  <PhoneInput
-  country={shipmentDetails.country.toLowerCase() || "us"} // Sync with country dropdown
-  value={shipmentDetails.phoneNumber}
-  onChange={(value, countryData) => {
-    if (countryData && "countryCode" in countryData) {
-      setShipmentDetails((prev) => ({
-        ...prev,
-        phoneNumber: value,
-        country: countryData.countryCode.toUpperCase(), // Sync with phone input
-      }));
-    }
-  }}
-  inputStyle={{
-    width: "100%",
-    height: "42px", // Match height with other input fields
-    backgroundColor: "#0a0a0a", // Match background
-    color: "#f0f0f0", // Match text color
-    border: "1px solid #333333", // Match border style
-    borderRadius: "6px", // Match rounded corners
-    paddingLeft: "65px", // Ensure padding for flag dropdown
-    fontSize: "16px", // Match font size
-    boxShadow: "0 0 5px rgba(255, 255, 255, 0.1)", // Subtle shadow for a polished look
-  }}
-  containerStyle={{
-    width: "100%",
-    position: "relative", // For better control of flag position
-  }}
-  buttonStyle={{
-    backgroundColor: "transparent", // Transparent to blend with input
-    border: "none", // Remove default border
-    position: "absolute", // Position it over input
-    left: "10px", // Align flag within the input
-    top: "50%", // Center vertically
-    transform: "translateY(-50%)", // Center vertically
-    height: "24px", // Adjust flag size
-    width: "24px", // Adjust flag size
-    pointerEvents: "none", // Prevent flag from being clickable
-  }}
-  dropdownStyle={{
-    backgroundColor: "#0a0a0a", // Match dropdown with background
-    color: "#f0f0f0", // Match text color
-    border: "1px solid #333333", // Match dropdown border
-    borderRadius: "6px", // Match rounded corners
-    zIndex: 1000, // Ensure it appears above other elements
-  }}
-  placeholder="Enter your phone number"
-/>
-</div>
+                  <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
+                    Phone Number
+                  </label>
+                  <PhoneInput
+                    country={shipmentDetails.country.toLowerCase() || "us"} // Sync with country dropdown
+                    value={shipmentDetails.phoneNumber}
+                    onChange={(value, countryData) => {
+                      if (countryData && "countryCode" in countryData) {
+                        setShipmentDetails((prev) => ({
+                          ...prev,
+                          phoneNumber: value,
+                          country: countryData.countryCode.toUpperCase(), // Sync with phone input
+                        }));
+                      }
+                    }}
+                    inputStyle={{
+                      width: "100%",
+                      height: "42px", // Match height with other input fields
+                      backgroundColor: "#0a0a0a", // Match background
+                      color: "#f0f0f0", // Match text color
+                      border: "1px solid #333333", // Match border style
+                      borderRadius: "6px", // Match rounded corners
+                      paddingLeft: "65px", // Ensure padding for flag dropdown
+                      fontSize: "16px", // Match font size
+                      boxShadow: "0 0 5px rgba(255, 255, 255, 0.1)", // Subtle shadow for a polished look
+                    }}
+                    containerStyle={{
+                      width: "100%",
+                      position: "relative", // For better control of flag position
+                    }}
+                    buttonStyle={{
+                      backgroundColor: "transparent", // Transparent to blend with input
+                      border: "none", // Remove default border
+                      position: "absolute", // Position it over input
+                      left: "10px", // Align flag within the input
+                      top: "50%", // Center vertically
+                      transform: "translateY(-50%)", // Center vertically
+                      height: "24px", // Adjust flag size
+                      width: "24px", // Adjust flag size
+                      pointerEvents: "none", // Prevent flag from being clickable
+                    }}
+                    dropdownStyle={{
+                      backgroundColor: "#0a0a0a", // Match dropdown with background
+                      color: "#f0f0f0", // Match text color
+                      border: "1px solid #333333", // Match dropdown border
+                      borderRadius: "6px", // Match rounded corners
+                      zIndex: 1000, // Ensure it appears above other elements
+                    }}
+                    placeholder="Enter your phone number"
+                  />
+                </div>
               </div>
 
               <div>
@@ -397,44 +405,42 @@ const Pricing = () => {
               </button>
             </form>
           </>
-            ) : (
-            <div className="text-center">
-              <h2 className="text-3xl font-bold sm:text-4xl text-green-400">
-                Payment Successful!
-              </h2>
-              <p className="mt-4 text-gray-400">
-                Your transaction was successful. Your Orion is on its way!
-              </p>
-              <p className="mt-2 text-gray-400">
-                For further information, please contact us at:{" "}
-                <a
-                  href="mailto:orion@dioneprotocol.com"
-                  className="text-purple-500 underline"
-                >
-                  orion@dioneprotocol.com
-                </a>
-              </p>
-              <p className="mt-4 text-gray-300">
-                <span className="font-bold">Transaction Hash:</span>
-                <br />
-                <span className="text-purple-500 break-all">
-                  {transactionHash}
-                </span>
-              </p>
-              <p className="mt-4 text-gray-300">
-                <a
-                  href={`https://testnet.odysseyscan.com/tx/${transactionHash}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-purple-500 underline"
-                >
-                  View on Blockchain Explorer
-                </a>
-              </p>
-            </div>
-        )
-        }
-
+        ) : (
+          <div className="text-center">
+            <h2 className="text-3xl font-bold sm:text-4xl text-green-400">
+              Payment Successful!
+            </h2>
+            <p className="mt-4 text-gray-400">
+              Your transaction was successful. Your Orion is on its way!
+            </p>
+            <p className="mt-2 text-gray-400">
+              For further information, please contact us at:{" "}
+              <a
+                href="mailto:orion@dioneprotocol.com"
+                className="text-purple-500 underline"
+              >
+                orion@dioneprotocol.com
+              </a>
+            </p>
+            <p className="mt-4 text-gray-300">
+              <span className="font-bold">Transaction Hash:</span>
+              <br />
+              <span className="text-purple-500 break-all">
+                {transactionHash}
+              </span>
+            </p>
+            <p className="mt-4 text-gray-300">
+              <a
+                href={`https://testnet.odysseyscan.com/tx/${transactionHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple-500 underline"
+              >
+                View on Blockchain Explorer
+              </a>
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );

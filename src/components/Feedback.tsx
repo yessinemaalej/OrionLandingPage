@@ -10,7 +10,7 @@ const Feedback = () => {
         <h1 className="text-2xl font-bold sm:text-3xl text-purple1">We want to hear from you !</h1>
 
         <p className="mt-4 text-gray-500">
-        We value your input! As an early adopter of the ORION Dione Protocol, your feedback will be instrumental 
+        We value your input! As a potential member of the ORION community, your feedback will be instrumental 
         in refining our product. Share your experiences and suggestions to help us enhance the ORION experience 
         before the official launch.
 

@@ -7,10 +7,9 @@ const Features = () => {
   <section className="bg-black text-white">
   <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
     <div className="mx-auto text-center">
-      <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">Join the Early Adopter Program Waitlist</h2>
-
+    <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">Join the Waitlist Program </h2>
       <p className="mt-4 text-gray-400 py-3">
-      Secure your spot to be among the first to experience ORION, a groundbreaking 
+      Secure your spot within our main launch waitlist for ORION, a groundbreaking
       device that combines the power of blockchain with renewable energy. <br /> 
       Gain early access to a resilient and sustainable technology designed to operate anywhere, 
       from urban centers to the most remote locations.
@@ -90,8 +89,7 @@ const Features = () => {
         <button className="mt-5 p-[3px] relative ">
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
           <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
-            <a href="https://yu773y9kayu.typeform.com/to/NYY4zLRl?utm_source=xxxxx&utm_medium=xxxxx&utm_campaign=xxxxx&utm_term=xxxxx&utm_content=xxxxx">Get Started</a> 
-          </div>
+          <a href="https://yu773y9kayu.typeform.com/to/NYY4zLRl?utm_source=xxxxx&utm_medium=xxxxx&utm_campaign=xxxxx&utm_term=xxxxx&utm_content=xxxxx">Join the Waitlist Program</a>           </div>
         </button> 
     </div>
     
