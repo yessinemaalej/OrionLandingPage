@@ -229,5 +229,6 @@ app.patch("/api/users/:walletAddress", async (req, res) => {
 });
 
 // Start the server
-//const PORT = 5005;
-app.listen(PORT, () => console.log(`Server running on port ${process.env.PORT}`));
+const PORT = process.env.PORT;
+console.log(PORT)
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
