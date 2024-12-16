@@ -9,11 +9,11 @@ import { countries } from "countries-list";
 import axios from "axios";
 
 const Pricing = () => {
-  const [address, setAddress] = useState<string>(""); // User's wallet address
-
+  const [address, setAddress] = useState<string>(""); 
   const [isClient, setIsClient] = useState(false);
-  const [transactionHash, setTransactionHash] = useState<string | null>(null); // Transaction hash
+  const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
+  const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState<boolean>(true);
   const [shipmentDetails, setShipmentDetails] = useState({
     fullName: "",
     email: "",
@@ -24,20 +24,25 @@ const Pricing = () => {
     addressLine2: "",
     phoneNumber: "",
   });
-  const [promoCode, setPromoCode] = useState<string>(""); // Promo code input
-  const [promoStatus, setPromoStatus] = useState<string | null>(null); // Promo code verification status
-  const [discountedAmount, setDiscountedAmount] = useState<number | null>(null); // Discounted payment amount
-  const fixedPaymentAmount = 100; // Fixed payment amount
+  const [promoCode, setPromoCode] = useState<string>("");
+  const [promoStatus, setPromoStatus] = useState<string | null>(null);
+  const [discountedAmount, setDiscountedAmount] = useState<number | null>(null);
+  const fixedPaymentAmount = 100;
 
-  // Smart Contract Details
   const smartContractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS;
   const contractABI = contractJson.abi;
 
   useEffect(() => {
-    setIsClient(true); // Ensure client-side rendering
+    setIsClient(true);
+    checkMetaMaskInstallation();
   }, []);
 
-  if (!isClient) return null; // Avoid hydration mismatches
+  const checkMetaMaskInstallation = () => {
+    const isInstalled = typeof window !== 'undefined' && Boolean(window.ethereum);
+    setIsMetaMaskInstalled(isInstalled);
+  };
+
+  if (!isClient) return null;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -56,9 +61,9 @@ const Pricing = () => {
         return;
       }
 
-      // Check if MetaMask is installed
+      // Only check MetaMask when verifying promo code
       if (!window.ethereum) {
-        setPromoStatus("MetaMask is not installed. Please install it.");
+        setPromoStatus("MetaMask is required to verify promo codes. Please install it first.");
         return;
       }
 
@@ -70,14 +75,11 @@ const Pricing = () => {
         signer
       );
 
-      // Call the smart contract to get the discount for the promo code
       const discount = await contract.promoCodes(promoCode);
-
-      const discountValue = Number(discount); // Convert BigInt to number
+      const discountValue = Number(discount);
 
       if (discountValue > 0) {
-        const discountedPayment =
-          (fixedPaymentAmount * (100 - discountValue)) / 100;
+        const discountedPayment = (fixedPaymentAmount * (100 - discountValue)) / 100;
         setDiscountedAmount(discountedPayment);
         setPromoStatus(`Promo code is valid! Discount: ${discountValue}%.`);
       } else {
@@ -97,40 +99,41 @@ const Pricing = () => {
 
   const handlePayment = async () => {
     try {
+      // Check if MetaMask is installed first
+      if (!window.ethereum) {
+        const installMetaMask = window.confirm(
+          "MetaMask is required to make payments. Would you like to install it now?"
+        );
+        if (installMetaMask) {
+          window.open('https://metamask.io/download/', '_blank');
+        }
+        return;
+      }
+
+      // Proceed with payment flow
       await axios.post("http://localhost:5005/api/payment-success", {
         email: shipmentDetails.email,
         fullName: shipmentDetails.fullName,
       });
-      // Check wallet connection
-      if (!window.ethereum) {
-        alert("MetaMask is not installed. Please install it to proceed.");
-        return;
-      }
 
       const provider = new ethers.BrowserProvider(window.ethereum);
       const accounts = await provider.send("eth_requestAccounts", []);
+      
       if (!accounts || accounts.length === 0) {
         alert("Please connect your wallet to proceed.");
         return;
       }
 
-      setAddress(accounts[0]); // Set the user's wallet address
-      const contractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS; // Replace with your contract address
+      setAddress(accounts[0]);
+      const contractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS;
+      
       if (!contractAddress) {
-        throw new Error(
-          "SMART_CONTRACT_ADDRESS is not defined in the environment variables."
-        );
+        throw new Error("SMART_CONTRACT_ADDRESS is not defined in the environment variables.");
       }
 
-      // Connect to the smart contract
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(
-        contractAddress,
-        contractABI,
-        signer
-      );
+      const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
-      // Call payment function
       const transaction = await contract.pay("ORDER123", promoCode.trim(), {
         value: ethers.parseUnits(
           discountedAmount?.toString() || fixedPaymentAmount.toString(),
@@ -138,9 +141,8 @@ const Pricing = () => {
         ),
       });
 
-      await transaction.wait(); // Wait for the transaction to be mined
+      await transaction.wait();
 
-      // Save user data to MongoDB
       const userData = {
         walletAddress: accounts[0],
         shipmentDetails,
@@ -164,24 +166,6 @@ const Pricing = () => {
       <div className="w-full mx-auto sm:px-6 sm:py-15">
         {!paymentSuccess ? (
           <>
-            {/* <div className="text-center">
-              <h2 className="text-3xl font-bold sm:text-4xl text-gray-200">
-                Pre-Payment
-              </h2>
-              <p className="text-gray-400 py-4">
-                To streamline your involvement, choose our pre-payment option
-                to:
-                <br />
-                <span className="font-bold">Secure Your Spot:</span> Ensure your
-                participation with early access and benefits.
-                <br />
-                <span className="font-bold">Customize Your Payment:</span>{" "}
-                Select between paying with DIONE tokens or a different payment
-                method based on your preference.
-              </p>
-            </div> */}
-
-            {/* Verification Form */}
             <div className="mx-auto mt-20 max-w-xl flex flex-col items-center justify-center text-center">
               <h2 className="text-3xl mt-5 pt-5 font-bold sm:text-4xl text-gray-200">
                 Please fill this form Carefully!
@@ -189,7 +173,7 @@ const Pricing = () => {
             </div>
             <form className="mx-auto max-w-2xl sm:mt-20 rounded-lg shadow-lg text-gray-200">
               <div className="w-full">
-                <label className="block text-sm/6 font-semibold text-gray-300 ">
+                <label className="block text-sm/6 font-semibold text-gray-300">
                   Full Name
                 </label>
                 <div className="mt-2.5">
@@ -199,7 +183,7 @@ const Pricing = () => {
                     name="fullName"
                     value={shipmentDetails.fullName}
                     onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg  focus:border-purple-400 focus:outline-none text-gray-400"
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-400 focus:outline-none text-gray-400"
                   />
                 </div>
               </div>
@@ -219,7 +203,6 @@ const Pricing = () => {
                 </div>
               </div>
 
-              {/* Shipment Address Details */}
               <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
                 <div>
                   <label className="block mt-3 text-sm/6 font-semibold text-gray-300">
@@ -274,7 +257,6 @@ const Pricing = () => {
                     Address Line 2 (Optional)
                   </label>
                   <input
-                    required
                     type="text"
                     name="addressLine2"
                     value={shipmentDetails.addressLine2}
@@ -303,51 +285,51 @@ const Pricing = () => {
                     Phone Number
                   </label>
                   <PhoneInput
-                    country={shipmentDetails.country.toLowerCase() || "us"} // Sync with country dropdown
+                    country={shipmentDetails.country.toLowerCase() || "us"}
                     value={shipmentDetails.phoneNumber}
                     onChange={(value, countryData) => {
                       if (countryData && "countryCode" in countryData) {
                         setShipmentDetails((prev) => ({
                           ...prev,
                           phoneNumber: value,
-                          country: countryData.countryCode.toUpperCase(), // Sync with phone input
+                          country: countryData.countryCode.toUpperCase(),
                         }));
                       }
                     }}
                     inputStyle={{
                       width: "100%",
-                      height: "42px", // Match height with other input fields
-                      backgroundColor: "#0a0a0a", // Match background
-                      color: "#f0f0f0", // Match text color
-                      border: "1px solid #374151", // Match border style
-                      borderRadius: "6px", // Match rounded corners
-                      paddingLeft: "65px", // Ensure padding for flag dropdown
-                      fontSize: "16px", // Match font size
-                      marginTop:"1px"
+                      height: "42px",
+                      backgroundColor: "#0a0a0a",
+                      color: "#f0f0f0",
+                      border: "1px solid #374151",
+                      borderRadius: "6px",
+                      paddingLeft: "65px",
+                      fontSize: "16px",
+                      marginTop: "1px"
                     }}
                     containerStyle={{
-                      margin:"2px",
-                      padding:"2px",
+                      margin: "2px",
+                      padding: "2px",
                       width: "100%",
-                      position: "relative", // For better control of flag position
+                      position: "relative",
                     }}
                     buttonStyle={{
-                      backgroundColor: "transparent", // Transparent to blend with input
-                      border: "none", // Remove default border
-                      position: "absolute", // Position it over input
-                      left: "10px", // Align flag within the input
-                      top: "50%", // Center vertically
-                      transform: "translateY(-50%)", // Center vertically
-                      height: "24px", // Adjust flag size
-                      width: "24px", // Adjust flag size
-                      pointerEvents: "none", // Prevent flag from being clickable
+                      backgroundColor: "transparent",
+                      border: "none",
+                      position: "absolute",
+                      left: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      height: "24px",
+                      width: "24px",
+                      pointerEvents: "none",
                     }}
                     dropdownStyle={{
-                      backgroundColor: "#0a0a0a", // Match dropdown with background
-                      color: "#f0f0f0", // Match text color
-                      border: "1px solid #333333", // Match dropdown border
-                      borderRadius: "6px", // Match rounded corners
-                      zIndex: 1000, // Ensure it appears above other elements
+                      backgroundColor: "#0a0a0a",
+                      color: "#f0f0f0",
+                      border: "1px solid #333333",
+                      borderRadius: "6px",
+                      zIndex: 1000,
                     }}
                     placeholder="Enter your phone number"
                   />
@@ -396,8 +378,8 @@ const Pricing = () => {
                 </div>
               )}
               <div className="flex items-center justify-center mt-5">
-                <a href="/TermsOfService_ORION.pdf" className="inline-flex gap-3 py-1 px-2  ">
-                  <span className="bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text [-webkit-backgound-clip:text]">Terms Of Service</span>
+                <a href="/TermsOfService_ORION.pdf" className="inline-flex gap-3 py-1 px-2">
+                  <span className="bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text">Terms Of Service</span>
                 </a>
               </div>
               <button
@@ -406,7 +388,7 @@ const Pricing = () => {
                 className="w-full mt-7 p-[3px] relative"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
-                <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+                <div className="px-8 py-2 bg-black rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent">
                   Proceed with Payment
                 </div>
               </button>
