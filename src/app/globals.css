@@ -55,6 +55,11 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%
   }
+  .phone-input:focus {
+    border-color: #8B5CF6 !important;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3) !important;
+    outline: none !important;
+  }
 }
 @layer base {
   * {

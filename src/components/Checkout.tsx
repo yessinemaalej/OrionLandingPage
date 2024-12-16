@@ -8,9 +8,8 @@ import ArrowIcon from "@/assets/icons/arrow-w.svg"
 export function Checkout() {
   return (
    
-    <div className="h-auto w-full bg-black flex flex-col items-center justify-center overflow-hidden">
-        
-        <h1 className="mt-20 mb-5 text-3xl font-bold sm:text-4xl text-center text-gray-200 relative z-20">
+    <div className="h-auto w-full bg-black flex flex-col items-center justify-center relative overflow-hidden">
+        <h1 className="mt-20 mb-5 text-3xl font-bold sm:text-4xl text-center text-gray-200">
         GET YOUR ORION NOW!
         </h1>
         <div className="w-[40rem] h-20 relative">
@@ -39,7 +38,7 @@ export function Checkout() {
         <br/>Thank you for being part of this journey!
 </p>
         </div>
-        <button className="mt-5 p-[3px] relative">
+        <button className="mt-10 p-[3px] relative">
             <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
             <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
                <a href="#target"> Payment Confirmation for ORION Beta Access

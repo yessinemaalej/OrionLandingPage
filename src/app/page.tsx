@@ -19,12 +19,12 @@ export default function Home() {
   return (
     <>
       {/* <Navbar /> */}
-      
+
       <AdminContent/>
 
-      {/*<Hero />*/}
-      <Checkout />
+      {/* <Hero /> */}
 
+      <Checkout />
       <Pricing />
       {/* <LogoTicker /> */}
       <Stats />

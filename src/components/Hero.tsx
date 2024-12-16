@@ -12,7 +12,7 @@ export const Hero = () => {
       id="hero"
       className="bg-black text-white bg-[linear-gradient(to_bottom,#000,#200D42_40%,#4F21A1_59%,#000_82%)] py-[72px] sm:py-24 relative overflow-clip"
     >
-      {/* <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center">
           <a href="#" className="inline-flex gap-3 border py-1 px-2 rounded-lg border-white/30">
             <span className="bg-[linear-gradient(to_right,#F87AFF,#FB93D0,#FFDD99,#C3F0B2,#2FD8FF)] text-transparent bg-clip-text [-webkit-backgound-clip:text]">Discover Orion here</span>
             <span className="inline-flex items-center gap-1">
@@ -20,7 +20,7 @@ export const Hero = () => {
             <ArrowIcon />
             </span>
           </a>
-        </div> */}
+        </div>
       {/* <div className="absolute h-[375px] w-[750px] sm:w-[1536px] sm:h-[768px] lg:w-[2400px] lg:h-[1200px] rounded-full bg-black left-1/2 -translate-x-1/2 bg-[radial-gradient(closest-side,#000_82%,#9560EB)] top-[calc(100%-96px)] sm:top-[calc(100%-120px)]"></div> */}
       
       <div className="flex justify-center">

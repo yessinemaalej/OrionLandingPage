@@ -160,7 +160,7 @@ const Pricing = () => {
   };
 
   return (
-    <section className="bg-black mt-20 text-gray-200">
+    <section id="target" className="bg-black mt-20 text-gray-200">
       <div className="w-full mx-auto sm:px-6 sm:py-15">
         {!paymentSuccess ? (
           <>
@@ -182,12 +182,12 @@ const Pricing = () => {
             </div> */}
 
             {/* Verification Form */}
-            <div id="target" className="mx-auto mt-20 max-w-xl flex flex-col items-center justify-center text-center">
-              <h2 className="text-3xl mt-5 font-bold sm:text-4xl text-gray-200">
+            <div className="mx-auto mt-20 max-w-xl flex flex-col items-center justify-center text-center">
+              <h2 className="text-3xl mt-5 pt-5 font-bold sm:text-4xl text-gray-200">
                 Please fill this form Carefully!
               </h2>
             </div>
-            <form className="mx-auto max-w-2xl sm:mt-20  p-6 rounded-lg shadow-lg text-gray-200">
+            <form className="mx-auto max-w-2xl sm:mt-20 rounded-lg shadow-lg text-gray-200">
               <div className="w-full">
                 <label className="block text-sm/6 font-semibold text-gray-300 ">
                   Full Name
@@ -199,7 +199,7 @@ const Pricing = () => {
                     name="fullName"
                     value={shipmentDetails.fullName}
                     onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg  focus:border-purple-500 focus:outline-none text-gray-400"
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg  focus:border-purple-400 focus:outline-none text-gray-400"
                   />
                 </div>
               </div>
@@ -214,7 +214,7 @@ const Pricing = () => {
                     name="email"
                     value={shipmentDetails.email}
                     onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none text-gray-400"
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-400 focus:outline-none text-gray-400"
                   />
                 </div>
               </div>
@@ -230,9 +230,9 @@ const Pricing = () => {
                     name="country"
                     value={shipmentDetails.country}
                     onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-lg focus:border-purple-500 focus:outline-none"
+                    className="w-full mt-1 p-2 border border-gray-700 bg-black rounded-lg focus:border-purple-400 focus:outline-none"
                   >
-                    <option value="">Select Country</option>
+                    <option value=""></option>
                     {countryOptions.map((country) => (
                       <option key={country.code} value={country.code}>
                         {country.name}
@@ -250,7 +250,7 @@ const Pricing = () => {
                     name="city"
                     value={shipmentDetails.city}
                     onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-400 focus:outline-none"
                   />
                 </div>
               </div>
@@ -266,7 +266,7 @@ const Pricing = () => {
                     name="addressLine1"
                     value={shipmentDetails.addressLine1}
                     onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-400 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -279,7 +279,7 @@ const Pricing = () => {
                     name="addressLine2"
                     value={shipmentDetails.addressLine2}
                     onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-400 focus:outline-none"
                   />
                 </div>
               </div>
@@ -295,7 +295,7 @@ const Pricing = () => {
                     name="zipCode"
                     value={shipmentDetails.zipCode}
                     onChange={handleChange}
-                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-500 focus:outline-none"
+                    className="w-full mt-1 p-2 border border-gray-700 bg-white/5 rounded-lg focus:border-purple-400 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -319,13 +319,15 @@ const Pricing = () => {
                       height: "42px", // Match height with other input fields
                       backgroundColor: "#0a0a0a", // Match background
                       color: "#f0f0f0", // Match text color
-                      border: "1px solid #333333", // Match border style
+                      border: "1px solid #374151", // Match border style
                       borderRadius: "6px", // Match rounded corners
                       paddingLeft: "65px", // Ensure padding for flag dropdown
                       fontSize: "16px", // Match font size
-                      boxShadow: "0 0 5px rgba(255, 255, 255, 0.1)", // Subtle shadow for a polished look
+                      marginTop:"1px"
                     }}
                     containerStyle={{
+                      margin:"2px",
+                      padding:"2px",
                       width: "100%",
                       position: "relative", // For better control of flag position
                     }}
@@ -361,7 +363,7 @@ const Pricing = () => {
                     type="text"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
-                    className="min-w-0 flex-auto mt-1 p-2 rounded-md border border-gray-700 bg-white/5 rounded-l-lg focus:border-purple-500 focus:outline-none"
+                    className="min-w-0 flex-auto mt-1 p-2 rounded-md border border-gray-700 bg-white/5 rounded-l-lg focus:border-purple-400 focus:outline-none"
                     placeholder="Enter your promo code"
                   />
                   <button
@@ -393,6 +395,11 @@ const Pricing = () => {
                   </p>
                 </div>
               )}
+              <div className="flex items-center justify-center mt-5">
+                <a href="/TermsOfService_ORION.pdf" className="inline-flex gap-3 py-1 px-2  ">
+                  <span className="bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text [-webkit-backgound-clip:text]">Terms Of Service</span>
+                </a>
+              </div>
               <button
                 type="button"
                 onClick={handlePayment}
