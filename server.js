@@ -9,7 +9,10 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 const nodemailer = require("nodemailer");
-
+app.use((req, res, next) => {
+  res.setHeader("Content-Security-Policy", "default-src 'self'; font-src 'self' https://server-checkout-51d94ebce307.herokuapp.com");
+  next();
+});
 // Configure Nodemailer
 const transporter = nodemailer.createTransport({
   service: "gmail", // You can use other services like SendGrid, Mailgun, etc.
