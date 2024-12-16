@@ -111,7 +111,7 @@ const Pricing = () => {
       }
 
       // Proceed with payment flow
-      await axios.post("http://localhost:5005/api/payment-success", {
+      await axios.post("https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/payment-success", {
         email: shipmentDetails.email,
         fullName: shipmentDetails.fullName,
       });
@@ -150,7 +150,7 @@ const Pricing = () => {
         transactionHash: transaction.hash,
       };
 
-      await axios.post("http://localhost:5005/api/users", userData);
+      await axios.post("https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/users", userData);
 
       setTransactionHash(transaction.hash);
       setPaymentSuccess(true);
