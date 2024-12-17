@@ -31,8 +31,8 @@ contract Checkout is ReentrancyGuard {
     mapping(string => uint256) public promoCodes; // Stores promo codes and their discounts
     string[] private promoCodeKeys; // Array to store all promo codes
 
-    constructor(uint256 _fixedPaymentAmount) {
-        owner = msg.sender;
+    constructor(uint256 _fixedPaymentAmount, address _newOwner) {
+        owner = _newOwner != address(0) ? _newOwner : msg.sender; 
         fixedPaymentAmount = _fixedPaymentAmount;
     }
 

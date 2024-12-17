@@ -7,14 +7,18 @@ import "react-phone-input-2/lib/style.css";
 import contractJson from "../Checkout.json";
 import { countries } from "countries-list";
 import axios from "axios";
-
+import Checkbox from "@mui/material/Checkbox";
+import { PcCase } from "lucide-react";
 const Pricing = () => {
-  const [address, setAddress] = useState<string>(""); 
+  const [address, setAddress] = useState<string>("");
   const [isClient, setIsClient] = useState(false);
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
   const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState<boolean>(true);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [payment, setPaymentAmount] = useState(1200)
   const [shipmentDetails, setShipmentDetails] = useState({
+    orderId: "",
     fullName: "",
     email: "",
     country: "",
@@ -32,17 +36,14 @@ const Pricing = () => {
   const smartContractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS;
   const contractABI = contractJson.abi;
 
-  useEffect(() => {
-    setIsClient(true);
-    checkMetaMaskInstallation();
-  }, []);
+
 
   const checkMetaMaskInstallation = () => {
-    const isInstalled = typeof window !== 'undefined' && Boolean(window.ethereum);
+    const isInstalled =
+      typeof window !== "undefined" && Boolean(window.ethereum);
     setIsMetaMaskInstalled(isInstalled);
   };
 
-  if (!isClient) return null;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -63,7 +64,9 @@ const Pricing = () => {
 
       // Only check MetaMask when verifying promo code
       if (!window.ethereum) {
-        setPromoStatus("MetaMask is required to verify promo codes. Please install it first.");
+        setPromoStatus(
+          "MetaMask is required to verify promo codes. Please install it first."
+        );
         return;
       }
 
@@ -77,18 +80,25 @@ const Pricing = () => {
 
       const discount = await contract.promoCodes(promoCode);
       const discountValue = Number(discount);
+      const pc = await contract.getAllPromoCodes();
+      console.log(promoCode);
+      console.log(pc);
 
       if (discountValue > 0) {
-        const discountedPayment = (fixedPaymentAmount * (100 - discountValue)) / 100;
+        const discountedPayment =
+          (fixedPaymentAmount * (100 - discountValue)) / 100;
         setDiscountedAmount(discountedPayment);
         setPromoStatus(`Promo code is valid! Discount: ${discountValue}%.`);
+        return { success: true, discount: discountedPayment };
       } else {
         setDiscountedAmount(null);
         setPromoStatus("Invalid promo code.");
+        return { success: false, message: "Invalid promo code." };
       }
     } catch (error) {
       console.error("Error verifying promo code:", error);
       setPromoStatus("Failed to verify promo code. Please try again.");
+      return { success: false, message: "Error verifying promo code." };
     }
   };
 
@@ -97,48 +107,122 @@ const Pricing = () => {
     name: country.name,
   }));
 
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  const generateOrderID = () => {
+    const timestamp = Date.now(); // Current timestamp
+    const randomNum = Math.floor(Math.random() * 100000); // Random number between 0-99999
+    return `ORDER-${timestamp}-${randomNum}`;
+  };
+  const calculatePaymentAmount = () => {
+    return discountedAmount !== null
+      ? discountedAmount.toString()
+      : fixedPaymentAmount.toString();
+  };
+
   const handlePayment = async () => {
+    setIsClient(true);
+    checkMetaMaskInstallation();
+
+   // if (!isClient) return null;
+
+    let discount = 0;
+    if (isProcessing) return;
+    setIsProcessing(true);
+
     try {
-      // Check if MetaMask is installed first
+      // If there's a promo code, verify it first
+      if (promoCode.trim()) {
+        const promoResult = await verifyPromoCode();
+        if (!promoResult?.success) {
+          setIsProcessing(false);
+          return;
+        }
+      }
+
+      await delay(2000); // Reduced delay for better UX
+
       if (!window.ethereum) {
         const installMetaMask = window.confirm(
           "MetaMask is required to make payments. Would you like to install it now?"
         );
         if (installMetaMask) {
-          window.open('https://metamask.io/download/', '_blank');
+          window.open("https://metamask.io/download/", "_blank");
         }
+        setIsProcessing(false);
         return;
       }
 
-      // Proceed with payment flow
-      await axios.post("https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/payment-success", {
-        email: shipmentDetails.email,
-        fullName: shipmentDetails.fullName,
-      });
-
       const provider = new ethers.BrowserProvider(window.ethereum);
       const accounts = await provider.send("eth_requestAccounts", []);
-      
+
       if (!accounts || accounts.length === 0) {
         alert("Please connect your wallet to proceed.");
+        setIsProcessing(false);
         return;
       }
 
       setAddress(accounts[0]);
+
       const contractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS;
-      
       if (!contractAddress) {
-        throw new Error("SMART_CONTRACT_ADDRESS is not defined in the environment variables.");
+        throw new Error(
+          "SMART_CONTRACT_ADDRESS is not defined in the environment variables."
+        );
       }
 
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, contractABI, signer);
+      const contract = new ethers.Contract(
+        contractAddress,
+        contractABI,
+        signer
+      );
+      const [codes, discounts] = await contract?.getAllPromoCodes();
 
-      const transaction = await contract.pay("ORDER123", promoCode.trim(), {
-        value: ethers.parseUnits(
-          discountedAmount?.toString() || fixedPaymentAmount.toString(),
-          "wei"
-        ),
+      console.log("Codes:", codes);
+      console.log("Discounts:", discounts);
+
+      // Map the codes and discounts into an array of promo objects
+      const formattedPromoCodes = codes
+        .map((code: string, index: number) => {
+          console.log("Processing Discount:", discounts[index]); // Inspect each discount value
+          const discountValue = discounts[index]; // Raw value
+          return {
+            code,
+            discount:
+              typeof discountValue === "bigint"
+                ? Number(discountValue)
+                : discountValue,
+          };
+        })
+        .filter((promo: { discount: number }) => promo.discount > 0);
+      const promoCodeData = formattedPromoCodes.find(
+        (promo: { code: string }) => promo.code === promoCode.trim()
+      );
+
+      if (!promoCodeData) {
+        //alert("Invalid promo code.");
+        setIsProcessing(false);
+      }
+
+      console.log("Promo Code Data:", promoCodeData);
+
+      const finalDiscount = promoCodeData?.discount || discount; // Get the discount from the matched promo code
+      const paymentAmount = (fixedPaymentAmount * (100 - finalDiscount)) / 100; // Calculate the payment amount after applying the discount
+      setPaymentAmount(paymentAmount)
+      console.log("Calculated Payment Amount:", paymentAmount);
+
+      // Proceed with payment process
+      console.log("promoCode", promoCode);
+      const orderId = generateOrderID();
+      setShipmentDetails((prev) => ({ ...prev, orderId }));
+
+      //const paymentAmount = calculatePaymentAmount();
+      console.log("Final payment amount:", paymentAmount);
+
+      const transaction = await contract.pay(orderId, promoCode.trim(), {
+        value: ethers.parseEther(paymentAmount.toString()),
       });
 
       await transaction.wait();
@@ -149,6 +233,10 @@ const Pricing = () => {
         shipmentStatus: "Not Shipped",
         transactionHash: transaction.hash,
       };
+      await axios.post("https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/payment-success", {
+        email: shipmentDetails.email,
+        fullName: shipmentDetails.fullName,
+      });
 
       await axios.post("https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/users", userData);
 
@@ -158,6 +246,8 @@ const Pricing = () => {
     } catch (error) {
       console.error("Payment failed:", error);
       alert("Payment failed. Please try again.");
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -167,11 +257,24 @@ const Pricing = () => {
         {!paymentSuccess ? (
           <>
             <div className="mx-auto mt-20 max-w-xl flex flex-col items-center justify-center text-center">
+            <button type="button" className="w-full mt-7 p-[3px] relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+                <div className="px-8 py-2 bg-black rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent">
+                Amount to pay: 1200 USDC ≈ 194447,99 DIONE
+                </div>
+              </button>
               <h2 className="text-3xl mt-5 pt-5 font-bold sm:text-4xl text-gray-200">
                 Please fill this form Carefully!
               </h2>
+              
             </div>
-            <form className="mx-auto max-w-2xl sm:mt-20 rounded-lg shadow-lg text-gray-200">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault(); // Prevent default browser behavior
+                handlePayment(); // Call your payment function
+              }}
+              className="mx-auto max-w-2xl sm:mt-20 rounded-lg shadow-lg text-gray-200"
+            >
               <div className="w-full">
                 <label className="block text-sm/6 font-semibold text-gray-300">
                   Full Name
@@ -305,7 +408,7 @@ const Pricing = () => {
                       borderRadius: "6px",
                       paddingLeft: "65px",
                       fontSize: "16px",
-                      marginTop: "1px"
+                      marginTop: "1px",
                     }}
                     containerStyle={{
                       margin: "2px",
@@ -351,9 +454,13 @@ const Pricing = () => {
                   <button
                     type="button"
                     onClick={verifyPromoCode}
-                    className="flex-none rounded-md bg-indigo-500 px-5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500e"
+                    className="w-30 mt-3 p-[3px] relative"
                   >
-                    Verify
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+
+                    <div className="px-8 py-2 bg-black rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent">
+                      Verify
+                    </div>
                   </button>
                 </div>
 
@@ -373,23 +480,36 @@ const Pricing = () => {
               {discountedAmount !== null && (
                 <div>
                   <p className="text-sm font-medium text-green-400">
-                    Your discounted payment amount: {discountedAmount} DIONE
+                    Your discounted payment amount
                   </p>
                 </div>
               )}
               <div className="flex items-center justify-center mt-5">
-                <a href="/TermsOfService_ORION.pdf" className="inline-flex gap-3 py-1 px-2">
-                  <span className="bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text">Terms Of Service</span>
+                <Checkbox
+                  required
+                  defaultChecked={false}
+                  color="secondary"
+                  sx={{
+                    "& .MuiSvgIcon-root": {
+                      backgroundColor: "#0D0D0D",
+                      borderRadius: "4px",
+                      border: "1px solid #374151",
+                    },
+                  }}
+                />
+                <a
+                  href="/TermsOfService_ORION.pdf"
+                  className="inline-flex gap-3 py-1 px-2  "
+                >
+                  <span className="bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text [-webkit-backgound-clip:text]">
+                    Agree to terms and conditions
+                  </span>
                 </a>
               </div>
-              <button
-                type="button"
-                onClick={handlePayment}
-                className="w-full mt-7 p-[3px] relative"
-              >
+              <button type="submit" className="w-full mt-7 p-[3px] relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
                 <div className="px-8 py-2 bg-black rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent">
-                  Proceed with Payment
+                  Proceed with Payment: {payment} USDC
                 </div>
               </button>
             </form>

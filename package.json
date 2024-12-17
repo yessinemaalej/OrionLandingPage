@@ -10,9 +10,12 @@
     "debug": "next dev"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@headlessui/react": "^2.1.5",
     "@heroicons/react": "^2.1.5",
     "@metamask/providers": "^18.1.1",
+    "@mui/material": "^6.2.0",
     "@nextui-org/react": "^2.4.6",
     "@radix-ui/react-accordion": "^1.2.0",
     "@tabler/icons-react": "^3.14.0",
