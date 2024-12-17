@@ -18,9 +18,9 @@ import { Checkout } from "@/components/Checkout";
 export default function Home() {
   return (
     <>
-      {/* <Navbar /> */}
+      {/* <Navbar /> 
 
-      <AdminContent/>
+      <AdminContent/>*/}
 
       {/* <Hero /> */}
 
@@ -29,7 +29,7 @@ export default function Home() {
       {/* <LogoTicker /> */}
       <Stats />
       {/*x<SparklesPreview />*/}
-      <Features />
+     {/* <Features />*/}
       {/* <Introduction /> */}
       {/* <LogoTicker /> */}
       <ProductShowcase />
