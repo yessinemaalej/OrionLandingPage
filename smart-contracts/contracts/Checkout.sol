@@ -4,36 +4,57 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 contract Checkout is ReentrancyGuard {
-    address public owner;
-
-    uint256 public fixedPaymentAmount;
-
-    event PaymentReceived(address indexed payer, uint256 amount, string orderId, uint256 timestamp);
-    event FundsWithdrawn(address indexed owner, uint256 amount);
-    event PromoCodeUpdated(string code, uint256 discount);
-
-    modifier onlyOwner() {
-        require(msg.sender == owner, "You are not the owner");
-        _;
-    }
-
+    // Structs
     struct Payment {
         uint256 amount;
         uint256 timestamp;
         string orderId;
     }
 
+    // State Variables
+    address public owner;
+    uint256 public fixedPaymentAmount;
+    
     mapping(address => Payment[]) public payments;
-
     address[] private payers;
     mapping(address => bool) private hasPaid;
+    
+    mapping(string => uint256) public promoCodes;
+    string[] private promoCodeKeys;
 
-    mapping(string => uint256) public promoCodes; // Stores promo codes and their discounts
-    string[] private promoCodeKeys; // Array to store all promo codes
+    // Events
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event PaymentReceived(address indexed payer, uint256 amount, string orderId, uint256 timestamp);
+    event FundsWithdrawn(address indexed owner, uint256 amount);
+    event PromoCodeUpdated(string code, uint256 discount);
+    event PaymentAmountUpdated(uint256 oldAmount, uint256 newAmount);
 
-    constructor(uint256 _fixedPaymentAmount, address _newOwner) {
-        owner = _newOwner != address(0) ? _newOwner : msg.sender; 
+    // Modifiers
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Caller is not the owner");
+        _;
+    }
+
+    // Constructor
+    constructor(uint256 _fixedPaymentAmount) {
+        owner = msg.sender;
         fixedPaymentAmount = _fixedPaymentAmount;
+    }
+
+    // Ownership Management
+    function transferOwnership(address newOwner) public onlyOwner {
+        require(newOwner != address(0), "New owner is the zero address");
+        address oldOwner = owner;
+        owner = newOwner;
+        emit OwnershipTransferred(oldOwner, newOwner);
+    }
+
+    // Payment Management
+    function updatePaymentAmount(uint256 newAmount) external onlyOwner {
+        require(newAmount > 0, "Payment amount must be greater than 0");
+        uint256 oldAmount = fixedPaymentAmount;
+        fixedPaymentAmount = newAmount;
+        emit PaymentAmountUpdated(oldAmount, newAmount);
     }
 
     function pay(string memory orderId, string memory promoCode) external payable nonReentrant {
@@ -63,6 +84,7 @@ contract Checkout is ReentrancyGuard {
         emit PaymentReceived(msg.sender, msg.value, orderId, block.timestamp);
     }
 
+    // Fund Management
     function withdraw() external onlyOwner nonReentrant {
         uint256 contractBalance = address(this).balance;
         require(contractBalance > 0, "No funds to withdraw");
@@ -75,6 +97,7 @@ contract Checkout is ReentrancyGuard {
         return address(this).balance;
     }
 
+    // Payment Query Functions
     function getPaymentsByAddress(address payer) external view returns (Payment[] memory) {
         return payments[payer];
     }
@@ -83,10 +106,11 @@ contract Checkout is ReentrancyGuard {
         return payers;
     }
 
+    // Promo Code Management
     function setPromoCode(string memory code, uint256 discount) external onlyOwner {
         require(discount <= 100, "Discount percentage must be between 0 and 100");
         if (promoCodes[code] == 0) {
-            promoCodeKeys.push(code); // Add the promo code to the keys array only if it's new
+            promoCodeKeys.push(code);
         }
         promoCodes[code] = discount;
         emit PromoCodeUpdated(code, discount);
