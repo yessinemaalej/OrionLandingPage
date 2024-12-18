@@ -46,6 +46,7 @@ export const useWeb3Connection = () => {
 
   const handleInstallMetaMask = () => {
     window.open('https://metamask.io/download/', '_blank');
+    setModalType(null)
   };
 
   return {

@@ -21,8 +21,9 @@ export const usePayment = (contractJson: any, smartContractAddress: string) => {
     setPaymentError(null);
 
     try {
-      let finalAmount = baseAmount;
-
+    const contract = await getContract(smartContractAddress, contractJson.abi);
+      const f = await contract.fixedPaymentAmount();
+      let finalAmount = Number(f.toString());
       // Verify promo code if provided
       if (promoCode.trim()) {
         const promoResult = await verifyPromoCodeWithContract(
@@ -38,17 +39,17 @@ export const usePayment = (contractJson: any, smartContractAddress: string) => {
       }
 
       // Check wallet balance
-      const hasEnoughFunds = await checkWalletBalance(finalAmount);
-      if (!hasEnoughFunds) {
+      //const hasEnoughFunds = await checkWalletBalance(finalAmount);
+      /*if (!hasEnoughFunds) {
         setPaymentError('INSUFFICIENT_FUNDS');
         return false;
-      }
+      }*/
 
-      const contract = await getContract(smartContractAddress, contractJson.abi);
+      
       const orderId = `ORDER-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
 
       const transaction = await contract.pay(orderId, promoCode.trim(), {
-        value: ethers.parseEther(finalAmount.toString()),
+        value: (finalAmount.toString()),
       });
 
       await transaction.wait();

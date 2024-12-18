@@ -3,15 +3,15 @@ import type { MetaMaskInpageProvider } from '@metamask/providers';
 import type { Contract, ContractInterface, Interface, InterfaceAbi } from 'ethers';
 
 export const ODYSSEY_CHAIN = {
-  chainId: '0x200F1',  // 131313 in hex
-  chainName: 'Odyssey Chain Testnet',
+  chainId: '0x25641', 
+  chainName: 'Odyssey Chain (Mainnet)',
   nativeCurrency: {
     name: 'DIONE',
     symbol: 'DIONE',
     decimals: 18
   },
-  rpcUrls: ['https://testnode.dioneprotocol.com/ext/bc/D/rpc'],
-  blockExplorerUrls: ['https://testnet.odysseyscan.com/']
+  rpcUrls: ['https://node.dioneprotocol.com/ext/bc/D/rpc'],
+  blockExplorerUrls: ['https://odysseyscan.com/']
 } as const;
 
 export const checkMetaMaskInstalled = (): boolean => {
@@ -102,7 +102,9 @@ export const checkWalletBalance = async (requiredAmount: number): Promise<boolea
     const signer = await provider.getSigner();
     const balance = await provider.getBalance(signer.address);
     const requiredWei = ethers.parseEther(requiredAmount.toString());
-    return balance >= requiredWei;
+
+
+    return balance >= requiredAmount;
   } catch (error) {
     console.error('Error checking wallet balance:', error);
     return false;
