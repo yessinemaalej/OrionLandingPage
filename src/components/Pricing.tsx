@@ -24,7 +24,7 @@ const Pricing = () => {
 
   
 
-  const smartContractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS;
+  const smartContractAddress = "0xB595dcB9fc64105038230Df2695fED59A51B2735";
   const contractABI = contractJson.abi;
   if(!smartContractAddress){
     return null
