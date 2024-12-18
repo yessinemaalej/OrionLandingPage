@@ -2,9 +2,9 @@ const hre = require("hardhat");
 
 async function main() {
   // Set payment amount to 100 wei (directly using wei value)
-  const paymentAmount = "100"; // 100 wei
+  const paymentAmount = "1"; 
 
-  console.log(`Deploying contract with fixed payment amount: ${paymentAmount} wei`);
+  console.log(`Deploying contract with fixed payment amount: ${paymentAmount} DIONE`);
 
   // Get the contract factory
   const Checkout = await hre.ethers.getContractFactory("Checkout");
