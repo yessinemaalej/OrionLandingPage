@@ -171,12 +171,10 @@ const fetchUsers = async () => {
     const contract = await connectToContract();
     const [codes, discounts] = await contract?.getAllPromoCodes();
   
-    console.log("Codes:", codes);
-    console.log("Discounts:", discounts);
+
   
     const formattedPromoCodes = codes
       .map((code: string, index: number) => {
-        console.log("Processing Discount:", discounts[index]); // Inspect each discount value
         const discountValue = discounts[index]; // Raw value
         return {
           code,
@@ -303,7 +301,7 @@ const fetchUsers = async () => {
                   <p>
                 <strong>Wallet Address:</strong>{" "}
                 <a
-                  href={`https://testnet.odysseyscan.com/address/${user.walletAddress}`}
+                  href={`https://odysseyscan.com/address/${user.walletAddress}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-purple-400 underline hover:text-purple-300"
@@ -314,7 +312,7 @@ const fetchUsers = async () => {
               <p>
                 <strong>Transaction Hash:</strong>{" "}
                 <a
-                  href={`https://testnet.odysseyscan.com/tx/${user.transactionHash}`}
+                  href={`https://odysseyscan.com/tx/${user.transactionHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-purple-400 underline hover:text-purple-300"
