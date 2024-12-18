@@ -13,7 +13,11 @@ import { ethers } from "ethers";
 import { usePromoCode } from "@/hooks/usePromoCode";
 import { PromoCodeInput } from "./PromoCodeInput";
 
+const smartContractAddress = "0xB595dcB9fc64105038230Df2695fED59A51B2735";
+const contractABI = contractJson.abi;
+
 const Pricing = () => {
+  // Move all hooks to the top level
   const {
     connectWallet,
     isConnecting,
@@ -22,13 +26,6 @@ const Pricing = () => {
     handleInstallMetaMask
   } = useWeb3Connection();
 
-  
-
-  const smartContractAddress = "0xB595dcB9fc64105038230Df2695fED59A51B2735";
-  const contractABI = contractJson.abi;
-  if(!smartContractAddress){
-    return null
-  }
   const { 
     isProcessing, 
     transactionHash, 
@@ -36,9 +33,6 @@ const Pricing = () => {
     paymentError, 
     processPayment 
   } = usePayment(contractJson, smartContractAddress);
-
-
-  
 
   const [shipmentDetails, setShipmentDetails] = useState({
     orderId: "",
@@ -52,9 +46,21 @@ const Pricing = () => {
     phoneNumber: "",
   });
 
-
   const [discountedAmount, setDiscountedAmount] = useState<number | null>(null);
   const fixedPaymentAmount = 100;
+
+  const { 
+    promoCode,
+    setPromoCode,
+    promoStatus,
+    isVerifying,
+    verifyPromoCode,
+    resetPromoCode,
+  } = usePromoCode(smartContractAddress, contractJson.abi, fixedPaymentAmount);
+
+  if (!smartContractAddress) {
+    return null;
+  }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -81,29 +87,18 @@ const Pricing = () => {
     }
   };
 
-
-
-  const { 
-    promoCode,
-    setPromoCode,
-    promoStatus,
-    isVerifying,
-    verifyPromoCode,
-    resetPromoCode,
-  } = usePromoCode( smartContractAddress, contractJson.abi, fixedPaymentAmount);
-  
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     
     try {
       const account = await connectWallet();
       if (!account) return;
 
       const paymentAmount = promoStatus.isValid && promoStatus.discountedAmount !== null
-      ? promoStatus.discountedAmount
-      : fixedPaymentAmount;      const success = await processPayment(
+        ? promoStatus.discountedAmount
+        : fixedPaymentAmount;
+      
+      const success = await processPayment(
         account,
         shipmentDetails,
         promoCode,
@@ -305,20 +300,15 @@ const Pricing = () => {
             </div>
           </div>
 
-
-            
-            <div className="flex gap-x-4">
+          <div className="flex gap-x-4">
             <PromoCodeInput
-  promoCode={promoCode}
-  onPromoCodeChange={setPromoCode}
-  onVerify={verifyPromoCode}
-  isVerifying={isVerifying}
-  status={promoStatus}
-/>
-              
-            </div>
-
-
+              promoCode={promoCode}
+              onPromoCodeChange={setPromoCode}
+              onVerify={verifyPromoCode}
+              isVerifying={isVerifying}
+              status={promoStatus}
+            />
+          </div>
 
           {discountedAmount !== null && (
             <div>
