@@ -142,7 +142,7 @@ const Pricing = () => {
         >
           <div className="w-full">
             <label className="block text-sm/6 font-semibold text-gray-300">
-              Full Name
+              FullName
             </label>
             <div className="mt-2.5">
               <input
