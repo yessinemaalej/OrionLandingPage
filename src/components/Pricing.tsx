@@ -26,14 +26,16 @@ const Pricing = () => {
 
   const smartContractAddress = process.env.NEXT_PUBLIC_SMART_CONTRACT_ADDRESS;
   const contractABI = contractJson.abi;
-
+  if(!smartContractAddress){
+    return null
+  }
   const { 
     isProcessing, 
     transactionHash, 
     paymentSuccess, 
     paymentError, 
     processPayment 
-  } = usePayment(contractJson, smartContractAddress || '');
+  } = usePayment(contractJson, smartContractAddress);
 
 
   
@@ -80,6 +82,7 @@ const Pricing = () => {
   };
 
 
+
   const { 
     promoCode,
     setPromoCode,
@@ -87,7 +90,7 @@ const Pricing = () => {
     isVerifying,
     verifyPromoCode,
     resetPromoCode,
-  } = usePromoCode( smartContractAddress || '', contractJson.abi, fixedPaymentAmount);
+  } = usePromoCode( smartContractAddress, contractJson.abi, fixedPaymentAmount);
   
 
   const handleSubmit = async (e: React.FormEvent) => {
