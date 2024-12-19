@@ -42,8 +42,19 @@ export function Checkout() {
             <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
             <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
                <a href="#target"> Payment Confirmation for ORION Beta Access
-               </a> 
+               </a>
+
             </div>
+            
+        </button>
+        <button className="mt-10 p-[3px] relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+            <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+                          Amount to pay: 1200 USDC ≈ 194447,99 DIONE
+
+
+            </div>
+            
         </button>
     </div>
     
