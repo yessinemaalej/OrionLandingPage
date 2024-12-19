@@ -23,7 +23,8 @@ export const usePayment = (contractJson: any, smartContractAddress: string) => {
     try {
     const contract = await getContract(smartContractAddress, contractJson.abi);
       const f = await contract.fixedPaymentAmount();
-      let finalAmount = Number(f.toString());
+      let finalAmount = f.toString();
+      console.log(finalAmount)
       // Verify promo code if provided
       if (promoCode.trim()) {
         const promoResult = await verifyPromoCodeWithContract(
@@ -34,20 +35,24 @@ export const usePayment = (contractJson: any, smartContractAddress: string) => {
         );
 
         if (promoResult.isValid && promoResult.discountedAmount !== null) {
-          finalAmount = Number(ethers.parseUnits(promoResult.discountedAmount.toString()));
-        }
+            const discount = promoResult.discountedAmount; // Assuming this is the discount percentage
+            const discountMultiplier = (100 - discount) / 100;
+            finalAmount = ethers.toBigInt(finalAmount) * ethers.toBigInt(Math.floor(discountMultiplier * 100)) / ethers.toBigInt(100);
+            console.log(finalAmount.toString());
+            
+          }
 
       }
 
       // Check wallet balance
-      //const hasEnoughFunds = await checkWalletBalance(finalAmount);
-      /*if (!hasEnoughFunds) {
+      const hasEnoughFunds = await checkWalletBalance(finalAmount);
+      if (!hasEnoughFunds) {
         setPaymentError('INSUFFICIENT_FUNDS');
         return false;
-      }*/
-
+      }
       
       const orderId = `ORDER-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+      console.log(finalAmount)
 
       const transaction = await contract.pay(orderId, promoCode.trim(), {
         value: (finalAmount.toString()),
@@ -55,13 +60,13 @@ export const usePayment = (contractJson: any, smartContractAddress: string) => {
 
       await transaction.wait();
 
+
       const userData = {
         walletAddress: account,
         shipmentDetails: { ...shipmentDetails, orderId },
         shipmentStatus: "Not Shipped",
         transactionHash: transaction.hash,
       };
-      console.log(userData)
 
       await axios.post("https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/payment-success", {
         email: shipmentDetails.email,

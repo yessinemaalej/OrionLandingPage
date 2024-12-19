@@ -49,11 +49,7 @@ export const PromoCodeInput: React.FC<PromoCodeInputProps> = ({
         </p>
       )}
 
-      {status.isValid && status.discountedAmount !== null && (
-        <p className="mt-2 text-sm font-medium text-green-400">
-          Your discounted payment amount: {status.discountedAmount} DIONE
-        </p>
-      )}
+      
     </div>
   );
 };
