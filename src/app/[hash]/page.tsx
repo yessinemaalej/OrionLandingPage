@@ -426,7 +426,7 @@ const AdminContent = () => {
       const contract = await connectToContract();
       const transaction = await contract?.withdraw();
       await transaction.wait();
-      setWithdrawStatus("Funds withdrawn successfully!");
+      setWithdrawStatus("Funds withdrawn successfully!!");
       fetchContractBalance();
     } catch (error: any) {
       console.error("Error withdrawing funds:", error);
