@@ -36,7 +36,7 @@ export const usePayment = (contractJson: any, smartContractAddress: string) => {
 
         if (promoResult.isValid && promoResult.discountedAmount !== null) {
             const discount = promoResult.discountedAmount; // Assuming this is the discount percentage
-            const discountMultiplier = (100 - discount) / 100;
+            const discountMultiplier =  discount / 100;
             finalAmount = ethers.toBigInt(finalAmount) * ethers.toBigInt(Math.floor(discountMultiplier * 100)) / ethers.toBigInt(100);
             console.log(finalAmount.toString());
             
