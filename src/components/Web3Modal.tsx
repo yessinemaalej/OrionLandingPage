@@ -26,7 +26,7 @@ export const Web3Modal: React.FC<Web3ModalProps> = ({
     },
     network: {
       title: 'Switch Network',
-      description: 'Please switch to Odyssey Chain Testnet to continue.',
+      description: 'Please switch to Odyssey Chain Mainnet to continue.',
       icon: <ArrowRight className="w-12 h-12 text-purple-500" />,
       actionText: 'Switch Network',
     },

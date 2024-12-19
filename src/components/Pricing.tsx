@@ -13,7 +13,7 @@ import { ethers } from "ethers";
 import { usePromoCode } from "@/hooks/usePromoCode";
 import { PromoCodeInput } from "./PromoCodeInput";
 
-const smartContractAddress = "0xB595dcB9fc64105038230Df2695fED59A51B2735";
+const smartContractAddress = "0x72D0737feDDbdFe3D144fe3E0cFE1BBff4b1D189";
 const contractABI = contractJson.abi;
 
 const Pricing = () => {
@@ -93,6 +93,7 @@ const Pricing = () => {
     try {
       const account = await connectWallet();
       if (!account) return;
+
 
       const paymentAmount = promoStatus.isValid && promoStatus.discountedAmount !== null
         ? promoStatus.discountedAmount
@@ -332,7 +333,7 @@ const Pricing = () => {
               }}
             />
             <a
-              href="/TermsOfService_ORION.pdf"
+              href="/TermsOfService_ORION.pdf" target="blank"
               className="inline-flex gap-3 py-1 px-2"
             >
               <span className="bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text [-webkit-backgound-clip:text]">

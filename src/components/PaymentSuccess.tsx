@@ -33,7 +33,7 @@ export const PaymentSuccess: React.FC<PaymentSuccessProps> = ({ transactionHash 
       </p>
       <p className="mt-4 text-gray-300">
         <a
-          href={`https://testnet.odysseyscan.com/tx/${transactionHash}`}
+          href={`https://odysseyscan.com/tx/${transactionHash}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-purple-500 underline"

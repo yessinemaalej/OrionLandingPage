@@ -49,11 +49,11 @@ export const Footer = () => {
           </li>
 
           <li>
-            <a className="text-gray-700 transition hover:text-purple1" href="#"> Privacy Policy </a>
+            <a className="text-gray-700 transition hover:text-purple1" href="/PrivacyPolicy.pdf" target="blank"> Privacy Policy </a>
           </li>
 
           <li>
-            <a className="text-gray-700 transition hover:text-purple1" href="#"> Terms of use </a>
+            <a className="text-gray-700 transition hover:text-purple1" href="/TermsOfService_ORION.pdf" target="blank"> Terms of use </a>
           </li>        
         </ul>
 
