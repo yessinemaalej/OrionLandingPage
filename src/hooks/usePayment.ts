@@ -34,8 +34,9 @@ export const usePayment = (contractJson: any, smartContractAddress: string) => {
         );
 
         if (promoResult.isValid && promoResult.discountedAmount !== null) {
-          finalAmount = promoResult.discountedAmount;
+          finalAmount = Number(ethers.parseUnits(promoResult.discountedAmount.toString()));
         }
+
       }
 
       // Check wallet balance
@@ -60,6 +61,7 @@ export const usePayment = (contractJson: any, smartContractAddress: string) => {
         shipmentStatus: "Not Shipped",
         transactionHash: transaction.hash,
       };
+      console.log(userData)
 
       await axios.post("https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/payment-success", {
         email: shipmentDetails.email,

@@ -50,7 +50,7 @@ contract Checkout is ReentrancyGuard {
     }
 
     // Payment Management
-    function updatePaymentAmount(uint256 newAmount) external onlyOwner {
+    function updatePaymentAmount(uint256 newAmount) external {
         require(newAmount > 0, "Payment amount must be greater than 0");
         uint256 oldAmount = fixedPaymentAmount;
         fixedPaymentAmount = newAmount;
@@ -107,7 +107,7 @@ contract Checkout is ReentrancyGuard {
     }
 
     // Promo Code Management
-    function setPromoCode(string memory code, uint256 discount) external onlyOwner {
+    function setPromoCode(string memory code, uint256 discount) external {
         require(discount <= 100, "Discount percentage must be between 0 and 100");
         if (promoCodes[code] == 0) {
             promoCodeKeys.push(code);
@@ -116,7 +116,7 @@ contract Checkout is ReentrancyGuard {
         emit PromoCodeUpdated(code, discount);
     }
 
-    function removePromoCode(string memory code) external onlyOwner {
+    function removePromoCode(string memory code) external  {
         require(promoCodes[code] > 0, "Promo code does not exist");
         delete promoCodes[code];
         emit PromoCodeUpdated(code, 0);

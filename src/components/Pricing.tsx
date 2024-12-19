@@ -13,7 +13,7 @@ import { ethers } from "ethers";
 import { usePromoCode } from "@/hooks/usePromoCode";
 import { PromoCodeInput } from "./PromoCodeInput";
 
-const smartContractAddress = "0x72D0737feDDbdFe3D144fe3E0cFE1BBff4b1D189";
+const smartContractAddress = "0x85b7800448c7133d403734D6CB9C629BAd3aAEdf";
 const contractABI = contractJson.abi;
 
 const Pricing = () => {
