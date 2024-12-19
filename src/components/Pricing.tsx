@@ -128,7 +128,7 @@ const Pricing = () => {
       <div className="w-full mx-auto sm:px-6 sm:py-15">
         <div className="mx-auto mt-20 max-w-xl flex flex-col items-center justify-center text-center">
           <h2 className="text-3xl mt-5 pt-5 font-bold sm:text-4xl text-gray-200">
-            Please fill this form Carefully!
+          Please fill out this form if you are in ORION Alpha Group batch 1!
           </h2>
         </div>
 
