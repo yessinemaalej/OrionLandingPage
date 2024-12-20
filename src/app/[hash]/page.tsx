@@ -494,7 +494,7 @@ const AdminContent = () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        "https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/users"
+        "${process.env.NEXT_PUBLIC_BASE_URL}/api/users"
       );
       setUsers(response.data);
     } catch (error) {
@@ -506,7 +506,7 @@ const AdminContent = () => {
     if (!selectedUser) return;
     try {
       await axios.patch(
-        `https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/users/${selectedUser}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${selectedUser}`,
         {
           shipmentStatus: newStatus,
         }

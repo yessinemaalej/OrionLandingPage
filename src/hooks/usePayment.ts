@@ -68,12 +68,12 @@ export const usePayment = (contractJson: any, smartContractAddress: string) => {
         transactionHash: transaction.hash,
       };
 
-      await axios.post("https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/payment-success", {
+      await axios.post("${process.env.NEXT_PUBLIC_BASE_URL}/api/payment-success", {
         email: shipmentDetails.email,
         fullName: shipmentDetails.fullName,
       });
 
-      await axios.post("https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/users", userData);
+      await axios.post("${process.env.NEXT_PUBLIC_BASE_URL}/api/users", userData);
 
       setTransactionHash(transaction.hash);
       setPaymentSuccess(true);
