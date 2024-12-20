@@ -494,7 +494,7 @@ const AdminContent = () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        "${process.env.NEXT_PUBLIC_BASE_URL}/api/users"
+        `https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/users`
       );
       setUsers(response.data);
     } catch (error) {
@@ -506,7 +506,7 @@ const AdminContent = () => {
     if (!selectedUser) return;
     try {
       await axios.patch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${selectedUser}`,
+        `https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/users/${selectedUser}`,
         {
           shipmentStatus: newStatus,
         }
@@ -656,9 +656,9 @@ const AdminContent = () => {
                   <Wallet className="text-purple-400" size={24} />
                 </div>
                 <p className="text-4xl font-bold mb-4">
-                  {isOwner
-                    ? `${ethers.formatEther(contractBalance)} DIONE`
-                    : "*****"}
+                  
+                     {ethers.formatEther(contractBalance)} DIONE
+                    
                 </p>{" "}
                 <button
                   disabled={!isOwner}

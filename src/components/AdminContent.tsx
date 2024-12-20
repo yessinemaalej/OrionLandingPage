@@ -85,7 +85,7 @@ const [selectedUser, setSelectedUser] = useState<string | null>(null); // Curren
     if (!selectedUser) return;
 
     try {
-      await axios.patch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users/${selectedUser}`, {
+      await axios.patch(`https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/users/${selectedUser}`, {
         shipmentStatus: newStatus,
       });
       setSelectedUser(null); // Close the modal
@@ -100,7 +100,8 @@ const [selectedUser, setSelectedUser] = useState<string | null>(null); // Curren
   };
 const fetchUsers = async () => {
     try {
-      const response = await axios.get("${process.env.NEXT_PUBLIC_BASE_URL}/api/users");
+      const response = await axios.get(`https://evening-crag-08562-ae65e95d4573.herokuapp.com/api/users`);
+      console.log(process.env.NEXT_PUBLIC_BASE_URL)
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);

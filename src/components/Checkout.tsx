@@ -3,9 +3,27 @@
 
 import { SparklesCore } from "@/components/ui/sparkles";
 import ArrowIcon from "@/assets/icons/arrow-w.svg"
+import { getContract, checkWalletBalance } from '../utils/web3';
+import contractJson from "../Checkout.json";
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
 
  
 export function Checkout() {
+  const [amount, setAmount] = useState<bigint | null>(null);  
+  const smartContractAddress = "0x85b7800448c7133d403734D6CB9C629BAd3aAEdf";
+const contractABI = contractJson.abi;
+
+  async function getAmountToPay(){
+    const contract = await getContract(smartContractAddress, contractJson.abi);
+    const a = await contract.fixedPaymentAmount();  
+    console.log(a)
+    setAmount(BigInt(ethers.parseEther(ethers.formatEther(a.toString()))));
+    console.log(ethers.formatEther(a.toString()))
+  }
+
+  
+
   return (
    
     <div className="h-auto w-full bg-black flex flex-col items-center justify-center relative overflow-hidden">
@@ -47,10 +65,11 @@ export function Checkout() {
             </div>
             
         </button>
-        <button className="mt-10 p-[3px] relative">
+        <button className="mt-10 p-[3px] relative" onClick={getAmountToPay}>
             <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
             <div className="px-8 py-2  bg-black rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
-                          Amount to pay: 1200 USDC ≈ 194447,99 DIONE
+            
+           Amount to pay: 1200 USDC equivalent in DIONE Token
 
 
             </div>
