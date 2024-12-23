@@ -333,7 +333,7 @@ const Pricing = () => {
               }}
             />
             <a
-              href="/TermsOfService_ORION.pdf" target="blank"
+              href="/tos.pdf" target="blank"
               className="inline-flex gap-3 py-1 px-2"
             >
               <span className="bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text [-webkit-backgound-clip:text]">
