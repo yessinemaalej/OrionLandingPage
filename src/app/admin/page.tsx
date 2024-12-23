@@ -1,10 +1,27 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Lock } from 'lucide-react';
 import { LoginForm } from './login-form';
+import { PROTECTED_ROUTES } from '@/lib/routes';
 
 export default function LoginPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if already authenticated
+    const token = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('auth_token='))
+      ?.split('=')[1];
+
+    if (token === process.env.NEXT_PUBLIC_AUTH_TOKEN) {
+      router.push(`/${PROTECTED_ROUTES.admin}`);
+    }
+  }, [router]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">

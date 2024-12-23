@@ -53,7 +53,7 @@ export const Footer = () => {
           </li>
 
           <li>
-            <a className="text-gray-700 transition hover:text-purple1" href="/TermsOfService_ORION.pdf" target="blank"> Terms of use </a>
+            <a className="text-gray-700 transition hover:text-purple1" href="/tos.pdf" target="blank"> Terms of use </a>
           </li>        
         </ul>
 
