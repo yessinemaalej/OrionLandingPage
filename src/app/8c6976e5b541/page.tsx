@@ -25,7 +25,7 @@ declare global {
 
 // Types
 type ShipmentDetails = {
-    orderId: String,
+  orderId: String,
   fullName: string;
   email: string;
   country: string;
@@ -501,6 +501,7 @@ const AdminContent = () => {
       console.error("Error fetching users:", error);
     }
   };
+  let orders = 0;
 
   const updateShipmentStatus = async () => {
     if (!selectedUser) return;
@@ -515,6 +516,13 @@ const AdminContent = () => {
       fetchUsers();
     } catch (error) {
       console.error("Error updating shipment status:", error);
+    }
+    if (newStatus === "Shipped") {
+      await axios.post('https://evening-crag-08562-ae65e95d4573.herokuapp.com/webhook/shipping-update', {
+        orderId: orders,
+        status: newStatus,
+      });
+      orders+=1
     }
   };
 
@@ -751,6 +759,26 @@ const AdminContent = () => {
                 />
               ))}
             </div>
+<UserCard
+  key={12}
+  user={{
+    walletAddress: "0x1234567890abcdef1234567890abcdef12345678",
+    shipmentDetails: {
+      orderId: "12345",
+      fullName: "Chris Moris",
+      email: "chris@openvpp.energy",
+      country: "US",
+      city: "Oakland",
+      zipCode: "94618",
+      addressLine1: "5750 Margarido Dr",
+      addressLine2: "",
+      phoneNumber: "15109155298",
+    },
+    shipmentStatus: "Not Shipped",
+    transactionHash: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdef",
+  }}
+  onUpdateStatus={setSelectedUser}
+/>
           </>
         )}
 
